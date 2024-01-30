@@ -4,7 +4,12 @@
 \alias{logout_ui}
 \title{Logout button.}
 \usage{
-logout_ui(id, label = "Logout", icon = icon("user"), style = "")
+logout_ui(
+  id,
+  label = "Logout",
+  icon = shiny::icon("right-from-bracket"),
+  style = ""
+)
 }
 \arguments{
 \item{id}{id unique ID for the Shiny Login module.}

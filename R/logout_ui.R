@@ -4,7 +4,7 @@
 #' @export
 logout_ui <- function(id,
 					  label = 'Logout',
-					  icon = shiny::icon('user'),
+					  icon = shiny::icon('right-from-bracket'),
 					  style = "" #"position: absolute; right: 20px; top: 10px"
 ) {
 	is_logged_in(

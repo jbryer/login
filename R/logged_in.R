@@ -5,10 +5,10 @@
 #' @return a [@shiny::conditionalPanel()]
 #' @export
 is_logged_in <- function(id, ...) {
+	# # This is a hack to ensure that this is re-evaluated when the logged_in variable changes
+	div(textOutput(NS(id, 'logged_in')), style = 'visibility: hidden;')
 	conditionalPanel(
 		condition = paste0("output['", NS(id, 'logged_in'), "'] == 'TRUE'"),
-		# # This is a hack to ensure that this is re-evaluated when the logged_in variable changes
-		# div(textOutput(NS(id, 'logged_in')), style = 'visibility: hidden;'),
 		...
 	)
 }
@@ -20,10 +20,10 @@ is_logged_in <- function(id, ...) {
 #' @return a [@shiny::conditionalPanel()]
 #' @export
 is_not_logged_in <- function(id, ...) {
+	# # This is a hack to ensure that this is re-evaluated when the logged_in variable changes
+	div(textOutput(NS(id, 'logged_in')), style = 'visibility: hidden;')
 	conditionalPanel(
 		condition = paste0("output['", NS(id, 'logged_in'), "'] == 'FALSE'"),
-		# # This is a hack to ensure that this is re-evaluated when the logged_in variable changes
-		# div(textOutput(NS(id, 'logged_in')), style = 'visibility: hidden;'),
 		...
 	)
 }

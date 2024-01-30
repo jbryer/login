@@ -1,8 +1,6 @@
 library(shiny)
 library(login)
-
-library(cookies)
-library(emayili)
+library(shinyjs)
 
 if(file.exists('config.R')) {
     source('config.R')
@@ -15,14 +13,18 @@ if(file.exists('config.R')) {
 
 ###### User Interface ##########################################################
 ui <- fluidPage(
+    useShinyjs(),
     titlePanel("Shiny Login Template"),
-    tabsetPanel(
-        tabPanel('Login',
-                 login::login_ui(id = 'login_demo') ),
-        tabPanel('Create Accont',
-                 login::new_user_ui(id = 'login_demo') ),
-        tabPanel('Reset Password',
-                 login::reset_password_ui(id = 'login_demo'))
+    div(id = 'login_box',
+        tabsetPanel(
+            id = 'login_panel',
+            tabPanel('Login',
+                     login::login_ui(id = 'login_demo') ),
+            tabPanel('Create Account',
+                     login::new_user_ui(id = 'login_demo') ),
+            tabPanel('Reset Password',
+                     login::reset_password_ui(id = 'login_demo'))
+        )
     ),
     logout_ui('login_demo'),
     hr(),
@@ -42,8 +44,22 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     USER <- login::login_server(
         id = 'login_demo',
-        db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 'users.sqlite')
+        db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 'users.sqlite'),
+        reset_password_from_email = reset_password_from_email,
+        reset_password_subject = 'Reset password',
+        email_host = email_host,
+        email_port = email_port,
+        email_username = email_username,
+        email_password = email_password
     )
+
+    observeEvent(USER$logged_in, {
+        if(USER$logged_in) {
+            shinyjs::hide(id = 'login_box')
+        } else {
+            shinyjs::show(id = "login_box")
+        }
+    })
 
     output$is_logged_in <- renderText({
         USER$logged_in

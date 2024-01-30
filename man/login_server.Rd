@@ -4,7 +4,17 @@
 \alias{login_server}
 \title{Login server module.}
 \usage{
-login_server(id, db_conn = NULL, users_table = "users")
+login_server(
+  id,
+  db_conn = NULL,
+  users_table = "users",
+  reset_password_from_email = NULL,
+  reset_password_subject = "Reset password",
+  email_host = NULL,
+  email_port = NULL,
+  email_username = NULL,
+  email_password = NULL
+)
 }
 \arguments{
 \item{id}{unique ID for the Shiny Login module.}

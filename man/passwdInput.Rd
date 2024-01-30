@@ -2,7 +2,7 @@
 % Please edit documentation in R/passwdInput.R
 \name{passwdInput}
 \alias{passwdInput}
-\title{Password input textbox}
+\title{Password input textbox.}
 \usage{
 passwdInput(inputId, label, value)
 }
@@ -14,5 +14,8 @@ passwdInput(inputId, label, value)
 \item{value}{default value.}
 }
 \description{
-Password input textbox
+This is an extension to Shiny's built in passwordInput by encrpting the
+password client side before sending it to the server. Although it is encrypted
+in the client using JavaScript it highly recommend that you also use an SSL
+certificate (for https) as well.
 }

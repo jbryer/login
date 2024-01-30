@@ -2,18 +2,20 @@
 #'
 #' @param id unique ID for the Shiny Login module.
 #' @import shiny
+#' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery
 #' @importFrom cookies get_cookie set_cookie
+#' @importFrom stringr str_pad
 #' @export
 login_server <- function(
 		id,
 		db_conn = NULL,
 		users_table = 'users',
-		reset_password_from_email,
+		reset_password_from_email = NULL,
 		reset_password_subject = 'Reset password',
-		email_host,
-		email_port,
-		email_username,
-		email_password
+		email_host = NULL,
+		email_port = NULL,
+		email_username = NULL,
+		email_password = NULL
 
 ) {
 	moduleServer(id, function(input, output, session) {
@@ -37,10 +39,6 @@ login_server <- function(
 							   unique = format(Sys.time(), '%Y%m%d%H%M%S'),
 							   username = NA)
 
-		# observeEvent(USER, {
-		# 	session$userData$logged_in <- USER$logged_in
-		# })
-
 		output$logged_in <- renderText({
 			USER$logged_in
 		})
@@ -58,6 +56,16 @@ login_server <- function(
 
 		output$login_message <- renderText({
 			login_message()
+		})
+
+		output$login_ui <- renderUI({
+			wellPanel(
+				div(textOutput(NS(id, 'login_message')), style = 'color:red;'),
+				textInput(NS(id, 'username'), label = 'Email:', value = ''),
+				passwdInput(NS(id, 'password'), label = 'Password: ', value = ''),
+				actionButton(NS(id, "Login"),
+							 label = 'Login')
+			)
 		})
 
 		observeEvent(input$Login, {
@@ -90,11 +98,15 @@ login_server <- function(
 		##### Create new user ##################################################
 		new_user_message <- reactiveVal('')
 
+		output$new_user_message <- renderText({
+			new_user_message()
+		})
+
 		observeEvent(input$new_user, {
 			users <- get_users()
 			username <- input$new_username
 			password1 <- input$new_password1
-			passowrd2 <- input$new_passwrod2
+			password2 <- input$new_password2
 
 			id.username <- which(tolower(users$username) == tolower(username))
 			if(length(id.username) > 0) {
@@ -105,15 +117,15 @@ login_server <- function(
 				new_user_message('Please enter a valid password.')
 			} else {
 				newuser <- data.frame(
-					username = newusername,
-					password = newpassword1,
+					username = username,
+					password = password1,
 					stringsAsFactors = FALSE
 				)
 				for(i in names(users)[(!names(users) %in% names(newuser))]) {
 					newuser[,i] <- NA # Make sure the data.frames line up
 				}
 
-				DBI::dbWriteTable(login_db_conn, users_table, newuser, append = TRUE)
+				DBI::dbWriteTable(db_conn, users_table, newuser, append = TRUE)
 
 				new_user_message(paste0('New account created for ', username,
 										'. You can now login.'))
@@ -128,11 +140,11 @@ login_server <- function(
 		reset_username <- reactiveVal('')
 
 		output$reset_password_ui <- renderUI({
-			if(missing(reset_password_from_email) |
-			   missing(email_host) |
-			   missing(email_port) |
-			   missing(email_username) |
-			   missing(email_password)) {
+			if(is.null(reset_password_from_email) |
+			   is.null(email_host) |
+			   is.null(email_port) |
+			   is.null(email_username) |
+			   is.null(email_password)) {
 				return(div('Email server has not been configured.'))
 			}
 
@@ -147,29 +159,41 @@ login_server <- function(
 				wellPanel(
 					div(reset_message(), style = 'color:red'),
 					div(
-						textInput('forgot_password_email', 'Email address: ', value = '')),
-					br(),
-					actionButton('send_reset_password_code', 'Send reset code')
+						textInput(inputId = NS(id, 'forgot_password_email'),
+								  label = 'Email address: ',
+								  value = '')),
+					# br(),
+					actionButton(inputId = NS(id, 'send_reset_password_code'),
+								 label = 'Send reset code')
 				)
 			} else if(reset_password) {
 				wellPanel(
 					div(reset_message(), style = 'color:red'),
 					div(
-						passwordInput('reset_password1', label = 'Enter new password:', value = ''),
-						passwordInput('reset_password2', label = 'Confirm new password:', value = '')
+						passwdInput(inputId = NS(id, 'reset_password1'),
+									label = 'Enter new password:',
+									value = ''),
+						passwdInput(inputId = NS(id, 'reset_password2'),
+									label = 'Confirm new password:',
+									value = '')
 					),
-					br(),
-					actionButton('reset_new_password', 'Reset Password')
+					# br(),
+					actionButton(inputId = NS(id, 'reset_new_password'),
+								 label = 'Reset Password')
 				)
 			} else {
 				wellPanel(
 					div(reset_message(), style = 'color:red'),
 					div(
-						textInput('reset_password_code', 'Enter the code from the email:', value = '')
+						textInput(inputId = NS(id, 'reset_password_code'),
+								  label = 'Enter the code from the email:',
+								  value = '')
 					),
-					br(),
-					actionButton('send_reset_password_code', 'Resend Code'),
-					actionButton('submit_reset_password_code', 'Submit')
+					# br(),
+					actionButton(inputId = NS(id, 'send_reset_password_code'),
+								 label = 'Resend Code'),
+					actionButton(inputId = NS(id, 'submit_reset_password_code'),
+								 label = 'Submit')
 				)
 			}
 		})
@@ -200,12 +224,14 @@ login_server <- function(
 		})
 
 		observeEvent(input$send_reset_password_code, {
-			PASSWORD <- dbReadTable(db_conn, 'users')
+			PASSWORD <- DBI::dbReadTable(db_conn, 'users')
 			email_address <- isolate(input$forgot_password_email) |> tolower()
 			if(!email_address %in% PASSWORD$username) {
 				reset_message(paste0(email_address, ' not found.'))
 			} else {
-				code <- sample(099999, size = 1) |> as.character() |> str_pad(width = 6, pad = '0')
+				code <- sample(099999, size = 1) |>
+					as.character() |>
+					stringr::str_pad(width = 6, pad = '0')
 				tryCatch({
 					username <- PASSWORD[PASSWORD$username == email_address,]$username[1]
 					reset_username(username)
@@ -213,8 +239,7 @@ login_server <- function(
 						from(reset_password_from_email) |>
 						to(email_address) |>
 						subject(reset_password_subject) |>
-						text(paste0('Your password reset code is: ',
-									code,
+						text(paste0('Your password reset code is: ', code,
 									' \nIf you did not request to reset your password you can ignore this email.'))
 					smtp <- server(
 						email_host,
