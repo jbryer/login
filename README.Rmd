@@ -8,10 +8,14 @@ editor_options:
 
 # `login`: User authentication for Shiny applications
 
-**Author:** Jason Bryer, Ph.D. jason@bryer.org
+**Author:** Jason Bryer, Ph.D. jason@bryer.org  
 **Website:** https://github.com/jbryer/login/
 
-
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml)
+`r badger::badge_devel("jbryer/login", "blue")`
+`r badger::badge_cran_release("login")`
+<!-- badges: end -->
 
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, error=FALSE}
