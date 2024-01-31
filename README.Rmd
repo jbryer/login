@@ -47,8 +47,33 @@ remotes::install_github('jbryer/login')
 
 ## Getting Started
 
-There is a template located at [`inst/login_template/app.R`](inst/login_template/app.R) that demonstrates the basic funcationality.
+There is a template located at [`inst/login_template/app.R`](inst/login_template/app.R) that demonstrates the basic functionality. At minimum you need to call the `login_ui()` function in your UI. This will create a login box. This will also ensure the JavaScript and CSS assets are loaded to ensure the password is encrypted client size. It is important that you use the same `id` across all `login` functions.
 
+```{r, eval=FALSE}
+login::login_ui(id = 'login_demo')
+```
+
+To add a log out button use the `logout_ui()` function. Note that the button will only display if you are logged in.
+
+```{r, eval=FALSE}
+login::logout_ui('login_demo')
+```
+
+The `is_logged_in()` and `is_not_logged_in()` functions allow you encapsulate Shiny UI elements so they are only visible when the user is or is not logged in, respectively. 
+
+```{r, eval=FALSE}
+login::is_logged_in(
+  id = 'login_demo',
+  div("This only shows when you are logged in!")
+)
+```
+
+```{r, eval=FALSE}
+login::is_not_logged_in(
+  id = 'login_demo',
+  div("This only shows when you are NOT logged in!")
+)
+```
 
 ## Disclaimer
 
