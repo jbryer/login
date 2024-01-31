@@ -1,12 +1,13 @@
 #' JavaScript and CSS dependencies.
 #'
-#' @return a `htmlDependcies` object defining the JavaScript and CSS files.
+#' @return a [htmltools::htmlDependency()] object defining the JavaScript and CSS files.
 #' @importFrom htmltools htmlDependencies
+#' @importFrom utils packageVersion
 #' @export
 login_dependencies <- function() {
 	htmltools::htmlDependency(
 		name = 'login-assets',
-		version = packageVersion('login'),
+		version = utils::packageVersion('login'),
 		package = 'login',
 		src = 'assets',
 		script = c('md5.js', 'passwdInputBinding.js'),

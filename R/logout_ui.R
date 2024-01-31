@@ -1,6 +1,9 @@
 #' Logout button.
 #'
 #' @param id id unique ID for the Shiny Login module.
+#' @param label label of the logout button.
+#' @param icon icon for the logout button.
+#' @param style CSS styles for the logout button.
 #' @export
 logout_ui <- function(id,
 					  label = 'Logout',

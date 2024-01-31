@@ -18,6 +18,22 @@ login_server(
 }
 \arguments{
 \item{id}{unique ID for the Shiny Login module.}
+
+\item{db_conn}{a DBI database connection.}
+
+\item{users_table}{the name of the table in the database to store credentials.}
+
+\item{reset_password_from_email}{the from email address for password resets.}
+
+\item{reset_password_subject}{the subject of password reset emails.}
+
+\item{email_host}{SMTP email host.}
+
+\item{email_port}{SMPT email port.}
+
+\item{email_username}{username for the SMTP server.}
+
+\item{email_password}{password for the SMTP server.}
 }
 \description{
 Login server module.

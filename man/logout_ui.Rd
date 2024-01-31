@@ -13,6 +13,12 @@ logout_ui(
 }
 \arguments{
 \item{id}{id unique ID for the Shiny Login module.}
+
+\item{label}{label of the logout button.}
+
+\item{icon}{icon for the logout button.}
+
+\item{style}{CSS styles for the logout button.}
 }
 \description{
 Logout button.

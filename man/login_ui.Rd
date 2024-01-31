@@ -4,7 +4,7 @@
 \alias{login_ui}
 \title{Login UI elements.}
 \usage{
-login_ui(id, label = "Login", icon = shiny::icon("right-to-bracket"))
+login_ui(id)
 }
 \arguments{
 \item{id}{id unique ID for the Shiny Login module.}

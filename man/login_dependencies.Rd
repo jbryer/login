@@ -7,7 +7,7 @@
 login_dependencies()
 }
 \value{
-a `htmlDependcies` object defining the JavaScript and CSS files.
+a [htmltools::htmlDependency()] object defining the JavaScript and CSS files.
 }
 \description{
 JavaScript and CSS dependencies.

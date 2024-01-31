@@ -2,9 +2,7 @@
 #'
 #' @param id id unique ID for the Shiny Login module.
 #' @export
-login_ui <- function(id,
-					 label = 'Login',
-					 icon = shiny::icon('right-to-bracket')) {
+login_ui <- function(id) {
 	div(
 		# This is a hack to ensure that this is re-evaluated when the logged_in variable changes
 		div(textOutput(NS(id, 'logged_in')), style = 'visibility: hidden;'),

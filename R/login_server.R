@@ -1,7 +1,17 @@
 #' Login server module.
 #'
 #' @param id unique ID for the Shiny Login module.
+#' @param db_conn a DBI database connection.
+#' @param users_table the name of the table in the database to store credentials.
+#' @param reset_password_from_email the from email address for password resets.
+#' @param reset_password_subject the subject of password reset emails.
+#' @param email_host SMTP email host.
+#' @param email_port SMPT email port.
+#' @param email_username username for the SMTP server.
+#' @param email_password password for the SMTP server.
+#'
 #' @import shiny
+#' @importFrom emayili envelope from to subject text server
 #' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery
 #' @importFrom cookies get_cookie set_cookie
 #' @importFrom stringr str_pad
@@ -26,6 +36,7 @@ login_server <- function(
 		if(!users_table %in% DBI::dbListTables(db_conn)) {
 			users <- data.frame(username = character(),
 								password = character(),
+								created_date = numeric(),
 								stringsAsFactors = FALSE)
 			DBI::dbWriteTable(db_conn, users_table, users)
 		}
@@ -63,8 +74,7 @@ login_server <- function(
 				div(textOutput(NS(id, 'login_message')), style = 'color:red;'),
 				textInput(NS(id, 'username'), label = 'Email:', value = ''),
 				passwdInput(NS(id, 'password'), label = 'Password: ', value = ''),
-				actionButton(NS(id, "Login"),
-							 label = 'Login')
+				actionButton(NS(id, "Login"), label = 'Login')
 			)
 		})
 
@@ -119,6 +129,7 @@ login_server <- function(
 				newuser <- data.frame(
 					username = username,
 					password = password1,
+					created_date = Sys.time(),
 					stringsAsFactors = FALSE
 				)
 				for(i in names(users)[(!names(users) %in% names(newuser))]) {
@@ -235,13 +246,13 @@ login_server <- function(
 				tryCatch({
 					username <- PASSWORD[PASSWORD$username == email_address,]$username[1]
 					reset_username(username)
-					email <- envelope() %>%
-						from(reset_password_from_email) |>
-						to(email_address) |>
-						subject(reset_password_subject) |>
-						text(paste0('Your password reset code is: ', code,
+					email <- emayili::envelope() |>
+						emayili::from(reset_password_from_email) |>
+						emayili::to(email_address) |>
+						emayili::subject(reset_password_subject) |>
+						emayili::text(paste0('Your password reset code is: ', code,
 									' \nIf you did not request to reset your password you can ignore this email.'))
-					smtp <- server(
+					smtp <- emayili::server(
 						email_host,
 						email_port,
 						email_username,
