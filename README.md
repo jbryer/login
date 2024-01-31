@@ -77,6 +77,17 @@ login::is_not_logged_in(
 )
 ```
 
+## My Wish List
+
+List of features I hope to add soon (here for my own regulation):
+
+- Abstract out data storage to allow for systems other than DBI.
+- Abstract out emailing (currently only used to reset passwords).
+- Have an option to require email verification for creating an account.
+- Allow for the collection of other metadata at time of user creation.
+- Have the ability of assigning users to groups.
+- Provide more options to adjust the appearance of UI.
+
 ## Disclaimer
 
 I am not a security expert. I have made every effort to use the best
