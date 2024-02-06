@@ -13,6 +13,7 @@ original script located here: https://gist.github.com/withr/9001831
 Useful links:
 \itemize{
   \item \url{https://github.com/jbryer/login}
+  \item \url{https://jbryer.github.io/login/}
   \item Report bugs at \url{https://github.com/jbryer/login/issues}
 }
 
