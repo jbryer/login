@@ -9,9 +9,7 @@ emayili_emailer(
   email_port = NULL,
   email_username = NULL,
   email_password = NULL,
-  from_email = NULL,
-  new_account_subject = "Verify your new account",
-  reset_password_subject = "Reset password"
+  from_email = NULL
 )
 }
 \arguments{
@@ -24,10 +22,6 @@ emayili_emailer(
 \item{email_password}{password for the SMTP server.}
 
 \item{from_email}{the from email address sent from [login_server()].}
-
-\item{new_account_subject}{the subject used for verifying new accounts.}
-
-\item{reset_password_subject}{the subject of password reset emails.}
 }
 \description{
 This returns a function that can be used with the [login_server()]. Specfically,

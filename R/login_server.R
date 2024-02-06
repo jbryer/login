@@ -4,9 +4,11 @@
 #' @param db_conn a DBI database connection.
 #' @param users_table the name of the table in the database to store credentials.
 #' @param emailer function used to send email messages. The function should have
-#'        have two parameters: `to_email` for the address to send the email and
-#'        `message` for the contents of the email address. See [emayili_emailer()]
-#'        for an example.
+#'        have three parameters: `to_email` for the address to send the email,
+#'        `subject` for the subject of the email and `message` for the contents
+#'        of the email address. See [emayili_emailer()] for an example.
+#' @param reset_password_subject the subject of password reset emails.
+#' @param new_account_subject the subject used for verifying new accounts.
 #' @param verify_email if true new accounts will need to verify their email
 #'        address before the account is crated. This is done by sending a six
 #'        digit code to the email address.
@@ -28,6 +30,8 @@ login_server <- function(
 		db_conn = NULL,
 		users_table = 'users',
 		emailer = NULL,
+		new_account_subject = 'Verify your new account',
+		reset_password_subject = 'Reset password',
 		verify_email = !is.null(emailer),
 		additional_fields = NULL,
 		cookie_name = 'loginusername',
@@ -224,6 +228,7 @@ login_server <- function(
 					code <- generate_code()
 					tryCatch({
 						emailer(to_email = username,
+								subject = new_account_subject,
 								message = paste0(
 									'Your confirmation code to create a new account is: ', code,
 									' \nIf you did not request to create a new account you can ignore this email.'))
@@ -262,6 +267,7 @@ login_server <- function(
 				newuser <- new_user_values()
 				email_address <- newuser[1,]$username
 				emailer(to_email = email_address,
+						subject = new_account_subject,
 						message = paste0(
 							'Your confirmation code to create a new account is: ', code,
 							' \nIf you did not request to create a new account you can ignore this email.'))
@@ -369,6 +375,7 @@ login_server <- function(
 					username <- PASSWORD[PASSWORD$username == email_address,]$username[1]
 					reset_username(username)
 					emailer(to_email = email_address,
+							subject = reset_password_subject,
 							message = paste0(
 								'Your password reset code is: ', code,
 								' \nIf you did not request to reset your password you can ignore this email.'))

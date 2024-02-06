@@ -9,6 +9,8 @@ login_server(
   db_conn = NULL,
   users_table = "users",
   emailer = NULL,
+  new_account_subject = "Verify your new account",
+  reset_password_subject = "Reset password",
   verify_email = !is.null(emailer),
   additional_fields = NULL,
   cookie_name = "loginusername",
@@ -25,9 +27,13 @@ login_server(
 \item{users_table}{the name of the table in the database to store credentials.}
 
 \item{emailer}{function used to send email messages. The function should have
-have two parameters: `to_email` for the address to send the email and
-`message` for the contents of the email address. See [emayili_emailer()]
-for an example.}
+have three parameters: `to_email` for the address to send the email,
+`subject` for the subject of the email and `message` for the contents
+of the email address. See [emayili_emailer()] for an example.}
+
+\item{new_account_subject}{the subject used for verifying new accounts.}
+
+\item{reset_password_subject}{the subject of password reset emails.}
 
 \item{verify_email}{if true new accounts will need to verify their email
 address before the account is crated. This is done by sending a six

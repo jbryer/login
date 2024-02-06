@@ -5,8 +5,6 @@
 #'
 #' @seealso [login_server()]
 #' @param from_email the from email address sent from [login_server()].
-#' @param reset_password_subject the subject of password reset emails.
-#' @param new_account_subject the subject used for verifying new accounts.
 #' @param email_host SMTP email host.
 #' @param email_port SMPT email port.
 #' @param email_username username for the SMTP server.
@@ -18,15 +16,13 @@ emayili_emailer <- function(
 		email_port = NULL,
 		email_username = NULL,
 		email_password = NULL,
-		from_email = NULL,
-		new_account_subject = 'Verify your new account',
-		reset_password_subject = 'Reset password'
+		from_email = NULL
 ) {
-	function(to_email, message) {
+	function(to_email, subject, message) {
 		email <- emayili::envelope() |>
 			emayili::from(from_email) |>
 			emayili::to(to_email) |>
-			emayili::subject(reset_password_subject) |>
+			emayili::subject(subject) |>
 			emayili::text(message)
 		smtp <- emayili::server(
 			email_host,
