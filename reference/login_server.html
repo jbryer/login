@@ -53,6 +53,8 @@
 <span>  db_conn <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  users_table <span class="op">=</span> <span class="st">"users"</span>,</span>
 <span>  emailer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  new_account_subject <span class="op">=</span> <span class="st">"Verify your new account"</span>,</span>
+<span>  reset_password_subject <span class="op">=</span> <span class="st">"Reset password"</span>,</span>
 <span>  verify_email <span class="op">=</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">emailer</span><span class="op">)</span>,</span>
 <span>  additional_fields <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cookie_name <span class="op">=</span> <span class="st">"loginusername"</span>,</span>
@@ -78,9 +80,17 @@
 
 <dt>emailer</dt>
 <dd><p>function used to send email messages. The function should have
-have two parameters: `to_email` for the address to send the email and
-`message` for the contents of the email address. See [emayili_emailer()]
-for an example.</p></dd>
+have three parameters: `to_email` for the address to send the email,
+`subject` for the subject of the email and `message` for the contents
+of the email address. See [emayili_emailer()] for an example.</p></dd>
+
+
+<dt>new_account_subject</dt>
+<dd><p>the subject used for verifying new accounts.</p></dd>
+
+
+<dt>reset_password_subject</dt>
+<dd><p>the subject of password reset emails.</p></dd>
 
 
 <dt>verify_email</dt>
