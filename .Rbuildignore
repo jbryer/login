@@ -5,3 +5,6 @@ README.Rmd
 README.md
 build.R
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

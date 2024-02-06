@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# `login`: User authentication for Shiny applications
+# <img src="man/figures/login_hex.png" align="right" width="120" align="right" /> `login`: User authentication for Shiny applications
 
 **Author:** Jason Bryer, Ph.D. jason@bryer.org  
 **Website:** https://github.com/jbryer/login/

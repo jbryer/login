@@ -1,5 +1,5 @@
 
-# `login`: User authentication for Shiny applications
+# <img src="man/figures/login_hex.png" align="right" width="120" align="right" /> `login`: User authentication for Shiny applications
 
 **Author:** Jason Bryer, Ph.D. <jason@bryer.org>  
 **Website:** <https://github.com/jbryer/login/>
@@ -7,7 +7,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml)
-[![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)](https://github.com/jbryer/login)
+[![](https://img.shields.io/badge/devel%20version-0.5.0-blue.svg)](https://github.com/jbryer/login)
 [![](https://www.r-pkg.org/badges/version/login)](https://cran.r-project.org/package=login)
 <!-- badges: end -->
 
