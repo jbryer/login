@@ -11,6 +11,7 @@ if(file.exists('config.R')) {
 ###### User Interface ##########################################################
 ui <- fluidPage(
     useShinyjs(),
+    # cookies::cookie_dependency(),
     titlePanel("Shiny Login Template"),
     div(id = 'login_box',
         tabsetPanel(
@@ -42,12 +43,15 @@ server <- function(input, output, session) {
     USER <- login::login_server(
         id = 'login_demo',
         db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 'users.sqlite'),
-        reset_password_from_email = reset_password_from_email,
-        reset_password_subject = 'Reset password',
-        email_host = email_host,
-        email_port = email_port,
-        email_username = email_username,
-        email_password = email_password
+        emailer = emayili_emailer(
+            email_host = email_host,
+            email_port = email_port,
+            email_username = email_username,
+            email_password = email_password,
+            from_email = reset_password_from_email
+        ),
+        additional_fields = c('first_name' = 'First Name',
+                              'last_name' = 'Last Name')
     )
 
     observeEvent(USER$logged_in, {

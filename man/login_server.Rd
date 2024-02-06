@@ -8,12 +8,13 @@ login_server(
   id,
   db_conn = NULL,
   users_table = "users",
-  reset_password_from_email = NULL,
-  reset_password_subject = "Reset password",
-  email_host = NULL,
-  email_port = NULL,
-  email_username = NULL,
-  email_password = NULL
+  emailer = NULL,
+  verify_email = !is.null(emailer),
+  additional_fields = NULL,
+  cookie_name = "loginusername",
+  username_label = "Email:",
+  password_label = "Password:",
+  create_account_label = "Create Account"
 )
 }
 \arguments{
@@ -23,17 +24,27 @@ login_server(
 
 \item{users_table}{the name of the table in the database to store credentials.}
 
-\item{reset_password_from_email}{the from email address for password resets.}
+\item{emailer}{function used to send email messages. The function should have
+have two parameters: `to_email` for the address to send the email and
+`message` for the contents of the email address. See [emayili_emailer()]
+for an example.}
 
-\item{reset_password_subject}{the subject of password reset emails.}
+\item{verify_email}{if true new accounts will need to verify their email
+address before the account is crated. This is done by sending a six
+digit code to the email address.}
 
-\item{email_host}{SMTP email host.}
+\item{additional_fields}{a character vector fo additional fields the user is
+asked to fill in at the when creating a new account. The names of the
+vector correspond to the variable names and the values will be used
+as the input labels.}
 
-\item{email_port}{SMPT email port.}
+\item{cookie_name}{the name of the cookie saved. Set to `NULL` to disable cookies.}
 
-\item{email_username}{username for the SMTP server.}
+\item{username_label}{label used for text inputs of username.}
 
-\item{email_password}{password for the SMTP server.}
+\item{password_label}{label used for text inputs of password.}
+
+\item{create_account_label}{label for the create account button.}
 }
 \description{
 Login server module.

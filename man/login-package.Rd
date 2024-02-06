@@ -9,6 +9,14 @@
 This R package was modified from Huidong Tian's
 original script located here: https://gist.github.com/withr/9001831
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/jbryer/login}
+  \item Report bugs at \url{https://github.com/jbryer/login/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Jason Bryer \email{jason@bryer.org} (\href{https://orcid.org/0000-0002-2454-0402}{ORCID})
 

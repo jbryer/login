@@ -3,15 +3,22 @@
 #' @param id unique ID for the Shiny Login module.
 #' @param db_conn a DBI database connection.
 #' @param users_table the name of the table in the database to store credentials.
-#' @param reset_password_from_email the from email address for password resets.
-#' @param reset_password_subject the subject of password reset emails.
-#' @param email_host SMTP email host.
-#' @param email_port SMPT email port.
-#' @param email_username username for the SMTP server.
-#' @param email_password password for the SMTP server.
-#'
+#' @param emailer function used to send email messages. The function should have
+#'        have two parameters: `to_email` for the address to send the email and
+#'        `message` for the contents of the email address. See [emayili_emailer()]
+#'        for an example.
+#' @param verify_email if true new accounts will need to verify their email
+#'        address before the account is crated. This is done by sending a six
+#'        digit code to the email address.
+#' @param additional_fields a character vector fo additional fields the user is
+#'        asked to fill in at the when creating a new account. The names of the
+#'        vector correspond to the variable names and the values will be used
+#'        as the input labels.
+#' @param username_label label used for text inputs of username.
+#' @param password_label label used for text inputs of password.
+#' @param create_account_label label for the create account button.
+#' @param cookie_name the name of the cookie saved. Set to `NULL` to disable cookies.
 #' @import shiny
-#' @importFrom emayili envelope from to subject text server
 #' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery
 #' @importFrom cookies get_cookie set_cookie
 #' @importFrom stringr str_pad
@@ -20,13 +27,13 @@ login_server <- function(
 		id,
 		db_conn = NULL,
 		users_table = 'users',
-		reset_password_from_email = NULL,
-		reset_password_subject = 'Reset password',
-		email_host = NULL,
-		email_port = NULL,
-		email_username = NULL,
-		email_password = NULL
-
+		emailer = NULL,
+		verify_email = !is.null(emailer),
+		additional_fields = NULL,
+		cookie_name = 'loginusername',
+		username_label = 'Email:',
+		password_label = 'Password:',
+		create_account_label = "Create Account"
 ) {
 	moduleServer(id, function(input, output, session) {
 		# cookie_username <- paste0(id, 'username')
@@ -38,12 +45,27 @@ login_server <- function(
 								password = character(),
 								created_date = numeric(),
 								stringsAsFactors = FALSE)
+			if(!is.null(additional_fields)) {
+				for(i in seq_len(length(additional_fields))) {
+					users[,names(additional_fields[i])] <- character()
+				}
+			}
 			DBI::dbWriteTable(db_conn, users_table, users)
 		}
 
 		get_users <- function() {
 			# TODO: allow for non SQL user management
 			DBI::dbReadTable(db_conn, users_table)
+		}
+
+		add_user <- function(newuser) {
+			DBI::dbWriteTable(db_conn, users_table, newuser, append = TRUE)
+		}
+
+		generate_code <- function() {
+			sample(999999, size = 1) |>
+				as.character() |>
+				stringr::str_pad(width = 6, pad = '0')
 		}
 
 		USER <- reactiveValues(logged_in = FALSE,
@@ -54,13 +76,13 @@ login_server <- function(
 			USER$logged_in
 		})
 
-		# observeEvent(cookies::get_cookie(cookie_username), {
-		# 	username <- cookies::get_cookie(cookie_username)
-		# 	if(!is.null(username)) {
-		# 		USER$username <- username
-		# 		USER$logged_in <- TRUE
-		# 	}
-		# }, once = TRUE)
+		observeEvent(cookies::get_cookie(cookie_name = cookie_name, session = session), {
+			username <- cookies::get_cookie(cookie_name = cookie_name, session = session)
+			if(!is.null(username)) {
+				USER$username <- username
+				USER$logged_in <- TRUE
+			}
+		})#, once = TRUE)
 
 		##### User Login #######################################################
 		login_message <- reactiveVal('')
@@ -70,12 +92,24 @@ login_server <- function(
 		})
 
 		output$login_ui <- renderUI({
-			wellPanel(
+			args <- list(
 				div(textOutput(NS(id, 'login_message')), style = 'color:red;'),
-				textInput(NS(id, 'username'), label = 'Email:', value = ''),
-				passwdInput(NS(id, 'password'), label = 'Password: ', value = ''),
-				actionButton(NS(id, "Login"), label = 'Login')
+				textInput(NS(id, 'username'), label = username_label, value = ''),
+				passwdInput(NS(id, 'password'), label = password_label, value = '')
 			)
+
+			if(!is.null(cookie_name)) {
+				args[[length(args) + 1]] <- checkboxInput(
+					inputId = NS(id, 'remember_me'),
+					label = 'Remember me?',
+					value = TRUE)
+			}
+
+			args[[length(args) + 1]] <- actionButton(NS(id, "Login"),
+													 label = 'Login',
+													 value = TRUE)
+
+			do.call(wellPanel, args)
 		})
 
 		observeEvent(input$Login, {
@@ -88,10 +122,16 @@ login_server <- function(
 			} else if(password != users[Id.username,]$password) {
 				login_message('Incorrect password.')
 			} else {
+				if(!is.null(input$remember_me)) {
+					if(input$remember_me) {
+						cookies::set_cookie(cookie_name = cookie_name,
+											cookie_value = username,
+											session = session)
+					}
+				}
 				login_message('')
 				USER$logged_in <- TRUE
 				USER$username <- username
-				# cookies::set_cookie(cookie_username, username)
 			}
 		})
 
@@ -100,16 +140,52 @@ login_server <- function(
 			USER$logged_in <- FALSE
 			USER$username <- ''
 			USER$unique <- format(Sys.time(), '%Y%m%d%H%M%S')
-			# remove_cookie(cookie_username)
-			# remove_cookie(cookie_email)
-			# remove_cookie(cookie_group)
+			cookies::remove_cookie(cookie_name = cookie_name, session = session)
 		})
 
 		##### Create new user ##################################################
 		new_user_message <- reactiveVal('')
+		new_user_values <- reactiveVal(data.frame())
+		new_user_code_verify <- reactiveVal('')
 
 		output$new_user_message <- renderText({
 			new_user_message()
+		})
+
+		output$new_user_ui <- renderUI({
+			args <- list(
+				div(textOutput(NS(id, 'new_user_message')), style = 'color:red;')
+			)
+			if(new_user_code_verify() == '') {
+				args[[length(args) + 1]] <- textInput(inputId = NS(id, 'new_username'),
+							  label = username_label, value = '')
+				args[[length(args) + 1]] <- passwdInput(inputId = NS(id, 'new_password1'),
+								label = password_label, value = '')
+				args[[length(args) + 1]] <- passwdInput(inputId = NS(id, 'new_password2'),
+								label = paste0('Confirm ', password_label), value = '')
+
+				if(!is.null(additional_fields)) {
+					for(i in seq_len(length(additional_fields))) {
+						args[[length(args) + 1]] <- textInput(
+							inputId = NS(id, names(additional_fields)[i]),
+							label = additional_fields[i])
+					}
+				}
+
+				args[[length(args) + 1]] <- actionButton(NS(id, "new_user"), create_account_label)
+			} else {
+				args[[length(args) + 1]] <- div(
+					textInput(inputId = NS(id, 'new_user_code'),
+							  label = 'Enter the code from the email:',
+							  value = '')
+				)
+				args[[length(args) + 1]] <- actionButton(inputId = NS(id, 'send_new_user_code'),
+							 label = 'Resend Code')
+				args[[length(args) + 1]] <- actionButton(inputId = NS(id, 'submit_new_user_code'),
+							 label = 'Submit')
+			}
+
+			do.call(wellPanel, args)
 		})
 
 		observeEvent(input$new_user, {
@@ -132,17 +208,70 @@ login_server <- function(
 					created_date = Sys.time(),
 					stringsAsFactors = FALSE
 				)
+
+				if(!is.null(additional_fields)) {
+					for(i in seq_len(length(additional_fields))) {
+						newuser[1,names(additional_fields)[i]] <- input[[names(additional_fields)[i]]]
+					}
+				}
+
 				for(i in names(users)[(!names(users) %in% names(newuser))]) {
 					newuser[,i] <- NA # Make sure the data.frames line up
 				}
 
-				DBI::dbWriteTable(db_conn, users_table, newuser, append = TRUE)
+				if(verify_email) {
+					new_user_values(newuser)
+					code <- generate_code()
+					tryCatch({
+						emailer(to_email = username,
+								message = paste0(
+									'Your confirmation code to create a new account is: ', code,
+									' \nIf you did not request to create a new account you can ignore this email.'))
+						new_user_code_verify(code)
+					}, error = function(e) {
+						reset_message(paste0('Error sending email: ', as.character(e)))
+					})
 
-				new_user_message(paste0('New account created for ', username,
-										'. You can now login.'))
+				} else {
+					add_user(newuser)
+					new_user_message(paste0('New account created for ', username,
+											'. You can now login.'))
+				}
 			}
-
 		})
+
+		observeEvent(input$submit_new_user_code, {
+			if(input$submit_new_user_code == 1) {
+				code <- isolate(input$new_user_code)
+				if(nchar(code) != 6 & reset_code() == code) {
+					new_user_message('Code is not correct')
+				} else {
+					newuser <- new_user_values()
+					add_user(newuser)
+					new_user_values(data.frame())
+					new_user_code_verify('')
+					new_user_message(paste0('New account created for ', newuser[1,'username'],
+											'. You can now login.'))
+				}
+			}
+		})
+
+		observeEvent(input$send_new_user_code, {
+			tryCatch({
+				code <- generate_code()
+				newuser <- new_user_values()
+				email_address <- newuser[1,]$username
+				emailer(to_email = email_address,
+						message = paste0(
+							'Your confirmation code to create a new account is: ', code,
+							' \nIf you did not request to create a new account you can ignore this email.'))
+				new_user_code_verify(code)
+				new_user_message('A new code has been sent.')
+			}, error = function(e) {
+				reset_message(paste0('Error sending email: ', as.character(e)))
+			})
+		})
+
 
 		##### Reset password ###################################################
 		reset_code <- reactiveVal('')
@@ -151,11 +280,7 @@ login_server <- function(
 		reset_username <- reactiveVal('')
 
 		output$reset_password_ui <- renderUI({
-			if(is.null(reset_password_from_email) |
-			   is.null(email_host) |
-			   is.null(email_port) |
-			   is.null(email_username) |
-			   is.null(email_password)) {
+			if(is.null(emailer)) {
 				return(div('Email server has not been configured.'))
 			}
 
@@ -173,7 +298,6 @@ login_server <- function(
 						textInput(inputId = NS(id, 'forgot_password_email'),
 								  label = 'Email address: ',
 								  value = '')),
-					# br(),
 					actionButton(inputId = NS(id, 'send_reset_password_code'),
 								 label = 'Send reset code')
 				)
@@ -240,25 +364,14 @@ login_server <- function(
 			if(!email_address %in% PASSWORD$username) {
 				reset_message(paste0(email_address, ' not found.'))
 			} else {
-				code <- sample(099999, size = 1) |>
-					as.character() |>
-					stringr::str_pad(width = 6, pad = '0')
+				code <- generate_code()
 				tryCatch({
 					username <- PASSWORD[PASSWORD$username == email_address,]$username[1]
 					reset_username(username)
-					email <- emayili::envelope() |>
-						emayili::from(reset_password_from_email) |>
-						emayili::to(email_address) |>
-						emayili::subject(reset_password_subject) |>
-						emayili::text(paste0('Your password reset code is: ', code,
-									' \nIf you did not request to reset your password you can ignore this email.'))
-					smtp <- emayili::server(
-						email_host,
-						email_port,
-						email_username,
-						email_password
-					)
-					smtp(email, verbose = FALSE)
+					emailer(to_email = email_address,
+							message = paste0(
+								'Your password reset code is: ', code,
+								' \nIf you did not request to reset your password you can ignore this email.'))
 					reset_code(code)
 				}, error = function(e) {
 					reset_message(paste0('Error sending email: ', as.character(e)))
