@@ -20,8 +20,12 @@
 #' @param password_label label used for text inputs of password.
 #' @param create_account_label label for the create account button.
 #' @param cookie_name the name of the cookie saved. Set to `NULL` to disable cookies.
+#' @param create_account_message Email message sent to confirm email when creating
+#'        a new account. Include `%s` somewhere in the message to include the code.
+#' @param reset_email_message Email message sent to reset password. Include `%s`
+#'        somewhere in the message to include the code.
 #' @import shiny
-#' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery
+#' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery dbFetch
 #' @importFrom cookies get_cookie set_cookie
 #' @importFrom stringr str_pad
 #' @export
@@ -37,11 +41,11 @@ login_server <- function(
 		cookie_name = 'loginusername',
 		username_label = 'Email:',
 		password_label = 'Password:',
-		create_account_label = "Create Account"
+		create_account_label = "Create Account",
+		create_account_message = 'Your confirmation code to create a new account is: %s\nIf you did not request to create a new account you can ignore this email.',
+		reset_email_message = 'Your password reset code is: %s\nIf you did not request to reset your password you can ignore this email.'
 ) {
 	moduleServer(id, function(input, output, session) {
-		# cookie_username <- paste0(id, 'username')
-
 		# Check to see if the users_table is already in the database, if not
 		# create the table.
 		if(!users_table %in% DBI::dbListTables(db_conn)) {
@@ -60,6 +64,13 @@ login_server <- function(
 		get_users <- function() {
 			# TODO: allow for non SQL user management
 			DBI::dbReadTable(db_conn, users_table)
+		}
+
+		get_user <- function(username) {
+			DBI::dbSendQuery(
+				db_conn,
+				paste0(",SELECT * FROM ", users_table, " WHERE username='", username, "'")
+			) |> DBI::dbFetch()
 		}
 
 		add_user <- function(newuser) {
@@ -229,9 +240,7 @@ login_server <- function(
 					tryCatch({
 						emailer(to_email = username,
 								subject = new_account_subject,
-								message = paste0(
-									'Your confirmation code to create a new account is: ', code,
-									' \nIf you did not request to create a new account you can ignore this email.'))
+								message = sprintf(create_account_message, 2112))
 						new_user_code_verify(code)
 					}, error = function(e) {
 						reset_message(paste0('Error sending email: ', as.character(e)))
@@ -255,7 +264,8 @@ login_server <- function(
 					add_user(newuser)
 					new_user_values(data.frame())
 					new_user_code_verify('')
-					new_user_message(paste0('New account created for ', newuser[1,'username'],
+					new_user_message(paste0('New account created for ',
+											newuser[1,'username'],
 											'. You can now login.'))
 				}
 			}
@@ -268,9 +278,7 @@ login_server <- function(
 				email_address <- newuser[1,]$username
 				emailer(to_email = email_address,
 						subject = new_account_subject,
-						message = paste0(
-							'Your confirmation code to create a new account is: ', code,
-							' \nIf you did not request to create a new account you can ignore this email.'))
+						message = sprintf(create_account_message, 2112))
 				new_user_code_verify(code)
 				new_user_message('A new code has been sent.')
 			}, error = function(e) {
@@ -365,7 +373,7 @@ login_server <- function(
 		})
 
 		observeEvent(input$send_reset_password_code, {
-			PASSWORD <- DBI::dbReadTable(db_conn, 'users')
+			PASSWORD <- DBI::dbReadTable(db_conn, users_table)
 			email_address <- isolate(input$forgot_password_email) |> tolower()
 			if(!email_address %in% PASSWORD$username) {
 				reset_message(paste0(email_address, ' not found.'))
@@ -376,9 +384,7 @@ login_server <- function(
 					reset_username(username)
 					emailer(to_email = email_address,
 							subject = reset_password_subject,
-							message = paste0(
-								'Your password reset code is: ', code,
-								' \nIf you did not request to reset your password you can ignore this email.'))
+							message = sprintf(reset_email_message, 2112))
 					reset_code(code)
 				}, error = function(e) {
 					reset_message(paste0('Error sending email: ', as.character(e)))

@@ -16,7 +16,9 @@ login_server(
   cookie_name = "loginusername",
   username_label = "Email:",
   password_label = "Password:",
-  create_account_label = "Create Account"
+  create_account_label = "Create Account",
+  confirm_email_message =
+    "Your confirmation code to create a new account is: \%s\\nIf you did not request to create a new account you can ignore this email."
 )
 }
 \arguments{
