@@ -17,8 +17,10 @@ login_server(
   username_label = "Email:",
   password_label = "Password:",
   create_account_label = "Create Account",
-  confirm_email_message =
-    "Your confirmation code to create a new account is: \%s\\nIf you did not request to create a new account you can ignore this email."
+  create_account_message =
+    "Your confirmation code to create a new account is: \%s\\nIf you did not request to create a new account you can ignore this email.",
+  reset_email_message =
+    "Your password reset code is: \%s\\nIf you did not request to reset your password you can ignore this email."
 )
 }
 \arguments{
@@ -53,6 +55,12 @@ as the input labels.}
 \item{password_label}{label used for text inputs of password.}
 
 \item{create_account_label}{label for the create account button.}
+
+\item{create_account_message}{Email message sent to confirm email when creating
+a new account. Include `%s` somewhere in the message to include the code.}
+
+\item{reset_email_message}{Email message sent to reset password. Include `%s`
+somewhere in the message to include the code.}
 }
 \description{
 Login server module.
