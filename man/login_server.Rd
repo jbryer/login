@@ -17,10 +17,8 @@ login_server(
   username_label = "Email:",
   password_label = "Password:",
   create_account_label = "Create Account",
-  create_account_message =
-    "Your confirmation code to create a new account is: \%s\\nIf you did not request to create a new account you can ignore this email.",
-  reset_email_message =
-    "Your password reset code is: \%s\\nIf you did not request to reset your password you can ignore this email."
+  create_account_message,
+  reset_email_message
 )
 }
 \arguments{
@@ -57,11 +55,16 @@ as the input labels.}
 \item{create_account_label}{label for the create account button.}
 
 \item{create_account_message}{Email message sent to confirm email when creating
-a new account. Include `%s` somewhere in the message to include the code.}
+a new account. Include `\%s` somewhere in the message to include the code.}
 
-\item{reset_email_message}{Email message sent to reset password. Include `%s`
+\item{reset_email_message}{Email message sent to reset password. Include `\%s`
 somewhere in the message to include the code.}
 }
+\value{
+a [shiny::reactiveValues()] object that includes two values: `logged_in`
+       (this is TRUE if the user is logged in) and `username` which has the
+       user's login username if logged in.
+}
 \description{
-Login server module.
+This is the main server logic for the `login` Shiny module.
 }

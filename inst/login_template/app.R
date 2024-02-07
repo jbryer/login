@@ -13,7 +13,6 @@ APP_ID <- 'login_demo'
 ###### User Interface ##########################################################
 ui <- fluidPage(
     useShinyjs(),
-    # cookies::cookie_dependency(),
     titlePanel("Shiny Login Template"),
     div(id = 'login_box',
         tabsetPanel(

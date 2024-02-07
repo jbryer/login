@@ -1,5 +1,7 @@
 #' Login server module.
 #'
+#' This is the main server logic for the `login` Shiny module.
+#'
 #' @param id unique ID for the Shiny Login module.
 #' @param db_conn a DBI database connection.
 #' @param users_table the name of the table in the database to store credentials.
@@ -21,9 +23,12 @@
 #' @param create_account_label label for the create account button.
 #' @param cookie_name the name of the cookie saved. Set to `NULL` to disable cookies.
 #' @param create_account_message Email message sent to confirm email when creating
-#'        a new account. Include `%s` somewhere in the message to include the code.
-#' @param reset_email_message Email message sent to reset password. Include `%s`
+#'        a new account. Include `\%s` somewhere in the message to include the code.
+#' @param reset_email_message Email message sent to reset password. Include `\%s`
 #'        somewhere in the message to include the code.
+#' @return a [shiny::reactiveValues()] object that includes two values: `logged_in`
+#'        (this is TRUE if the user is logged in) and `username` which has the
+#'        user's login username if logged in.
 #' @import shiny
 #' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery dbFetch
 #' @importFrom cookies get_cookie set_cookie
@@ -42,9 +47,19 @@ login_server <- function(
 		username_label = 'Email:',
 		password_label = 'Password:',
 		create_account_label = "Create Account",
-		create_account_message = 'Your confirmation code to create a new account is: %s\nIf you did not request to create a new account you can ignore this email.',
-		reset_email_message = 'Your password reset code is: %s\nIf you did not request to reset your password you can ignore this email.'
+		create_account_message,
+		reset_email_message
 ) {
+	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
+	if(missing(create_account_message)) {
+		create_account_message < 'Your confirmation code to create a new account is: %s\n
+		     If you did not request to create a new account you can ignore this email.'
+	}
+	if(missing(reset_email_message)) {
+		reset_email_message <- 'Your password reset code is: %s\n
+		     If you did not request to reset your password you can ignore this email.'
+	}
+
 	moduleServer(id, function(input, output, session) {
 		# Check to see if the users_table is already in the database, if not
 		# create the table.
