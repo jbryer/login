@@ -2,7 +2,7 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-02-07T13:46Z
+last_built: 2024-02-07T15:09Z
 urls:
   reference: https://jbryer.github.io/login/reference
   article: https://jbryer.github.io/login/articles
