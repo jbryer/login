@@ -47,15 +47,15 @@ login_server <- function(
 		username_label = 'Email:',
 		password_label = 'Password:',
 		create_account_label = "Create Account",
-		create_account_message,
-		reset_email_message
+		create_account_message = NULL,
+		reset_email_message = NULL
 ) {
 	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
-	if(missing(create_account_message)) {
+	if(is.null(create_account_message)) {
 		create_account_message < 'Your confirmation code to create a new account is: %s\n
 		     If you did not request to create a new account you can ignore this email.'
 	}
-	if(missing(reset_email_message)) {
+	if(is.null(reset_email_message)) {
 		reset_email_message <- 'Your password reset code is: %s\n
 		     If you did not request to reset your password you can ignore this email.'
 	}
