@@ -33,6 +33,7 @@
 #' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery dbFetch
 #' @importFrom cookies get_cookie set_cookie
 #' @importFrom stringr str_pad
+#' @importFrom shinybusy show_modal_spinner remove_modal_spinner
 #' @export
 login_server <- function(
 		id,
@@ -250,6 +251,8 @@ login_server <- function(
 				}
 
 				if(verify_email) {
+					shinybusy::show_modal_spinner(spin = 'circle',
+												  text = 'Please wait...')
 					new_user_values(newuser)
 					code <- generate_code()
 					tryCatch({
@@ -261,7 +264,7 @@ login_server <- function(
 						print(e)
 						reset_message(paste0('Error sending email: ', as.character(e)))
 					})
-
+					shinybusy::remove_modal_spinner()
 				} else {
 					add_user(newuser)
 					new_user_message(paste0('New account created for ', username,
@@ -289,6 +292,8 @@ login_server <- function(
 
 		observeEvent(input$send_new_user_code, {
 			tryCatch({
+				shinybusy::show_modal_spinner(spin = 'circle',
+											  text = 'Please wait...')
 				code <- generate_code()
 				newuser <- new_user_values()
 				email_address <- newuser[1,]$username
@@ -297,6 +302,7 @@ login_server <- function(
 						message = sprintf(create_account_message, code))
 				new_user_code_verify(code)
 				new_user_message('A new code has been sent.')
+				shinybusy::remove_modal_spinner()
 			}, error = function(e) {
 				print(e)
 				reset_message(paste0('Error sending email: ', as.character(e)))
@@ -396,6 +402,8 @@ login_server <- function(
 				reset_message(paste0(email_address, ' not found.'))
 			} else {
 				code <- generate_code()
+				shinybusy::show_modal_spinner(spin = 'circle',
+											  text = 'Please wait...')
 				tryCatch({
 					username <- PASSWORD[PASSWORD$username == email_address,]$username[1]
 					reset_username(username)
@@ -406,6 +414,7 @@ login_server <- function(
 				}, error = function(e) {
 					reset_message(paste0('Error sending email: ', as.character(e)))
 				})
+				shinybusy::remove_modal_spinner()
 			}
 		})
 

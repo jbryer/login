@@ -17,6 +17,7 @@ Imports:
     emayili,
     htmltools,
     shiny,
+    shinybusy,
     stringr,
     utils
 Enhances: 
