@@ -84,7 +84,6 @@ List of features I hope to add soon (here for my own regulation):
 * ~~Have an option to require email verification for creating an account.~~
 * ~~Allow for the collection of other metadata at time of user creation.~~
 * Have the ability of assigning users to groups.
-* Provide more options to adjust the appearance of UI.
 * ~~Save user login using cookies.~~
 * ~~Add created_date to new accounts.~~
 

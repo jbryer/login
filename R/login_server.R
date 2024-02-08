@@ -26,6 +26,9 @@
 #'        a new account. Include `\%s` somewhere in the message to include the code.
 #' @param reset_email_message Email message sent to reset password. Include `\%s`
 #'        somewhere in the message to include the code.
+#' @param enclosing_panel the Shiny element that contains all the UI elements.
+#'        The default is [shiny::wellPanel()]. If you wish a more subtle appearance
+#'        [htmltools::div()] is a reasonable choice.
 #' @return a [shiny::reactiveValues()] object that includes two values: `logged_in`
 #'        (this is TRUE if the user is logged in) and `username` which has the
 #'        user's login username if logged in.
@@ -49,7 +52,8 @@ login_server <- function(
 		password_label = 'Password:',
 		create_account_label = "Create Account",
 		create_account_message = NULL,
-		reset_email_message = NULL
+		reset_email_message = NULL,
+		enclosing_panel = shiny::wellPanel
 ) {
 	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
 	if(is.null(create_account_message)) {
@@ -140,7 +144,7 @@ login_server <- function(
 													 label = 'Login',
 													 value = TRUE)
 
-			do.call(wellPanel, args)
+			do.call(enclosing_panel, args)
 		})
 
 		observeEvent(input$Login, {
@@ -216,7 +220,7 @@ login_server <- function(
 							 label = 'Submit')
 			}
 
-			do.call(wellPanel, args)
+			do.call(enclosing_panel, args)
 		})
 
 		observeEvent(input$new_user, {
@@ -329,7 +333,7 @@ login_server <- function(
 				}
 			}
 			if(reset_code() == '') {
-				wellPanel(
+				enclosing_panel(
 					div(reset_message(), style = 'color:red'),
 					div(
 						textInput(inputId = NS(id, 'forgot_password_email'),
@@ -339,7 +343,7 @@ login_server <- function(
 								 label = 'Send reset code')
 				)
 			} else if(reset_password) {
-				wellPanel(
+				enclosing_panel(
 					div(reset_message(), style = 'color:red'),
 					div(
 						passwdInput(inputId = NS(id, 'reset_password1'),
@@ -354,7 +358,7 @@ login_server <- function(
 								 label = 'Reset Password')
 				)
 			} else {
-				wellPanel(
+				enclosing_panel(
 					div(reset_message(), style = 'color:red'),
 					div(
 						textInput(inputId = NS(id, 'reset_password_code'),

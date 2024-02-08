@@ -18,7 +18,8 @@ login_server(
   password_label = "Password:",
   create_account_label = "Create Account",
   create_account_message = NULL,
-  reset_email_message = NULL
+  reset_email_message = NULL,
+  enclosing_panel = shiny::wellPanel
 )
 }
 \arguments{
@@ -59,6 +60,10 @@ a new account. Include `\%s` somewhere in the message to include the code.}
 
 \item{reset_email_message}{Email message sent to reset password. Include `\%s`
 somewhere in the message to include the code.}
+
+\item{enclosing_panel}{the Shiny element that contains all the UI elements.
+The default is [shiny::wellPanel()]. If you wish a more subtle appearance
+[htmltools::div()] is a reasonable choice.}
 }
 \value{
 a [shiny::reactiveValues()] object that includes two values: `logged_in`
