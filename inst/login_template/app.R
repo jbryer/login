@@ -25,7 +25,7 @@ ui <- fluidPage(
                      login::reset_password_ui(id = APP_ID))
         )
     ),
-    login::logout_ui(APP_ID, style = "position: absolute; right: 20px; top: 10px"),
+    login::logout_button(APP_ID, style = "position: absolute; right: 20px; top: 10px"),
     hr(),
     div('Are you logged in? ', textOutput('is_logged_in')),
     div('Username: ', textOutput('username')),
@@ -43,7 +43,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     USER <- login::login_server(
         id = APP_ID,
-        db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 'users.sqlite'),
+        db_conn = DBI::dbConnect(RSQLite::SQLite(), 'users.sqlite'),
         emailer = emayili_emailer(
             email_host = email_host,
             email_port = email_port,
@@ -52,7 +52,8 @@ server <- function(input, output, session) {
             from_email = reset_password_from_email
         ),
         additional_fields = c('first_name' = 'First Name',
-                              'last_name' = 'Last Name')
+                              'last_name' = 'Last Name'),
+        salt = 'login_demo'
     )
 
     observeEvent(USER$logged_in, {

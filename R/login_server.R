@@ -33,6 +33,9 @@
 #'        [htmltools::div()] is a reasonable choice.
 #' @param code_length the number of digits of codes emailed for creating accounts
 #'        (if `verify_email == TRUE`) or resetting passwords.
+#' @param salt a salt to use to encrypt the password before storing it in the database.
+#' @param salt_alg the algorithm used to encrypt the password. See
+#'        [digest::digest()] for more details.
 #' @return a [shiny::reactiveValues()] object that includes two values: `logged_in`
 #'        (this is TRUE if the user is logged in) and `username` which has the
 #'        user's login username if logged in.
@@ -41,6 +44,7 @@
 #' @importFrom cookies get_cookie set_cookie
 #' @importFrom stringr str_pad
 #' @importFrom shinybusy show_modal_spinner remove_modal_spinner
+#' @importFrom digest digest
 #' @export
 login_server <- function(
 		id,
@@ -59,7 +63,9 @@ login_server <- function(
 		create_account_message = NULL,
 		reset_email_message = NULL,
 		enclosing_panel = shiny::wellPanel,
-		code_length = 6
+		code_length = 6,
+		salt = NULL,
+		salt_algo = "sha512"
 ) {
 	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
 	if(is.null(create_account_message)) {
@@ -93,6 +99,14 @@ login_server <- function(
 								   timestamp = numeric(),
 								   stringsAsFactors = FALSE)
 			DBI::dbWriteTable(db_conn, activity_table, activity)
+		}
+
+		get_password <- function(password) {
+			if(is.null(salt)) {
+				return(password)
+			} else {
+				return(digest::digest(paste0(salt, password), algo = salt_algo, serialize = FALSE))
+			}
 		}
 
 		add_activitiy <- function(username, activity) {
@@ -175,7 +189,7 @@ login_server <- function(
 		observeEvent(input$Login, {
 			users <- get_users()
 			username <- input$username
-			password <- input$password
+			password <- get_password(input$password)
 			Id.username <- which(tolower(users$username) == tolower(username))
 			if(is.null(Id.username) | length(Id.username) != 1) {
 				login_message('Username not found.')
@@ -253,15 +267,16 @@ login_server <- function(
 		observeEvent(input$new_user, {
 			users <- get_users()
 			username <- input$new_username
-			password1 <- input$new_password1
-			password2 <- input$new_password2
+			password1 <- get_password(input$new_password1)
+			password2 <- get_password(input$new_password2)
 
 			id.username <- which(tolower(users$username) == tolower(username))
 			if(length(id.username) > 0) {
 				new_user_message(paste0('Account already exists for ', username))
 			} else if(password1 != password2) {
 				new_user_message('Passwords to not match.')
-			} else if(password1 == 'd41d8cd98f00b204e9800998ecf8427e') {
+			} else if(input$new_password1 == 'd41d8cd98f00b204e9800998ecf8427e') {
+				# Check for a blank password
 				new_user_message('Please enter a valid password.')
 			} else {
 				newuser <- data.frame(
@@ -417,7 +432,7 @@ login_server <- function(
 			if(input$reset_password1 == input$reset_password2) {
 				query <- paste0(
 					"UPDATE users SET password = '",
-					input$reset_password1,
+					get_password(input$reset_password1),
 					"' WHERE username = '", reset_username(), "'"
 				)
 				DBI::dbSendQuery(db_conn, query)
@@ -443,7 +458,7 @@ login_server <- function(
 					reset_username(username)
 					emailer(to_email = email_address,
 							subject = reset_password_subject,
-							message = sprintf(reset_email_message, 2112))
+							message = sprintf(reset_email_message, code))
 					reset_code(code)
 				}, error = function(e) {
 					reset_message(paste0('Error sending email: ', as.character(e)))

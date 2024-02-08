@@ -21,7 +21,9 @@ login_server(
   create_account_message = NULL,
   reset_email_message = NULL,
   enclosing_panel = shiny::wellPanel,
-  code_length = 6
+  code_length = 6,
+  salt = NULL,
+  salt_algo = "sha512"
 )
 }
 \arguments{
@@ -72,6 +74,11 @@ The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 
 \item{code_length}{the number of digits of codes emailed for creating accounts
 (if `verify_email == TRUE`) or resetting passwords.}
+
+\item{salt}{a salt to use to encrypt the password before storing it in the database.}
+
+\item{salt_alg}{the algorithm used to encrypt the password. See
+[digest::digest()] for more details.}
 }
 \value{
 a [shiny::reactiveValues()] object that includes two values: `logged_in`

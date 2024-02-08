@@ -5,7 +5,7 @@
 #' @param icon icon for the logout button.
 #' @param style CSS styles for the logout button.
 #' @export
-logout_ui <- function(id,
+logout_button <- function(id,
 					  label = 'Logout',
 					  icon = shiny::icon('right-from-bracket'),
 					  style = "" #"position: absolute; right: 20px; top: 10px"

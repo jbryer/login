@@ -1,7 +1,7 @@
 Type: Package
 Package: login
 Title: Shiny Login Module
-Version: 0.5.1
+Version: 0.9.0
 Authors@R: 
     person("Jason", "Bryer", , "jason@bryer.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2454-0402"))
@@ -14,6 +14,7 @@ License: GPL (>= 3)
 Imports: 
     cookies,
     DBI,
+    digest,
     emayili,
     htmltools,
     shiny,
