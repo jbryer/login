@@ -5,6 +5,8 @@
 #' @param id unique ID for the Shiny Login module.
 #' @param db_conn a DBI database connection.
 #' @param users_table the name of the table in the database to store credentials.
+#' @param activity_table the name of the table in the database to log login and
+#'        logout activity.
 #' @param emailer function used to send email messages. The function should have
 #'        have three parameters: `to_email` for the address to send the email,
 #'        `subject` for the subject of the email and `message` for the contents
@@ -44,6 +46,7 @@ login_server <- function(
 		id,
 		db_conn = NULL,
 		users_table = 'users',
+		activity_table = 'users_activity',
 		emailer = NULL,
 		new_account_subject = 'Verify your new account',
 		reset_password_subject = 'Reset password',
@@ -82,6 +85,24 @@ login_server <- function(
 				}
 			}
 			DBI::dbWriteTable(db_conn, users_table, users)
+		}
+
+		if(!activity_table %in% DBI::dbListTables(db_conn)) {
+			activity <- data.frame(username = character(),
+								   action = character(),
+								   timestamp = numeric(),
+								   stringsAsFactors = FALSE)
+			DBI::dbWriteTable(db_conn, activity_table, activity)
+		}
+
+		add_activitiy <- function(username, activity) {
+			if(!is.null(activity_table)) {
+				new_activity <- data.frame(username = username,
+										   action = activity,
+										   timestamp = Sys.time(),
+										   stringsAsFactors = FALSE)
+				DBI::dbWriteTable(db_conn, activity_table, new_activity, append = TRUE)
+			}
 		}
 
 		get_users <- function() {
@@ -170,11 +191,13 @@ login_server <- function(
 				login_message('')
 				USER$logged_in <- TRUE
 				USER$username <- username
+				add_activitiy(username, 'login')
 			}
 		})
 
 		##### User logout ######################################################
 		observeEvent(input$logout, {
+			add_activitiy(USER$username, 'logout')
 			USER$logged_in <- FALSE
 			USER$username <- ''
 			USER$unique <- format(Sys.time(), '%Y%m%d%H%M%S')
@@ -274,6 +297,7 @@ login_server <- function(
 					shinybusy::remove_modal_spinner()
 				} else {
 					add_user(newuser)
+					add_activitiy(newuser[1,]$username, 'create_account')
 					new_user_message(paste0('New account created for ', username,
 											'. You can now login.'))
 				}
@@ -293,6 +317,7 @@ login_server <- function(
 					new_user_message(paste0('New account created for ',
 											newuser[1,'username'],
 											'. You can now login.'))
+					add_activitiy(newuser[1,]$username, 'create_account')
 				}
 			}
 		})
@@ -395,6 +420,7 @@ login_server <- function(
 					"' WHERE username = '", reset_username(), "'"
 				)
 				DBI::dbSendQuery(db_conn, query)
+				add_activitiy(reset_username(), 'password_reset')
 				reset_message('Password updated successfully. Please go to the login tab.')
 				reset_code('')
 			} else {

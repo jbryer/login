@@ -8,6 +8,7 @@ login_server(
   id,
   db_conn = NULL,
   users_table = "users",
+  activity_table = "users_activity",
   emailer = NULL,
   new_account_subject = "Verify your new account",
   reset_password_subject = "Reset password",
@@ -29,6 +30,9 @@ login_server(
 \item{db_conn}{a DBI database connection.}
 
 \item{users_table}{the name of the table in the database to store credentials.}
+
+\item{activity_table}{the name of the table in the database to log login and
+logout activity.}
 
 \item{emailer}{function used to send email messages. The function should have
 have three parameters: `to_email` for the address to send the email,
