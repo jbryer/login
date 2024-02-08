@@ -63,7 +63,8 @@
 <span>  create_account_label <span class="op">=</span> <span class="st">"Create Account"</span>,</span>
 <span>  create_account_message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  reset_email_message <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  enclosing_panel <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/shiny/man/wellPanel.html" class="external-link">wellPanel</a></span></span>
+<span>  enclosing_panel <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/shiny/man/wellPanel.html" class="external-link">wellPanel</a></span>,</span>
+<span>  code_length <span class="op">=</span> <span class="fl">6</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -139,6 +140,11 @@ somewhere in the message to include the code.</p></dd>
 <dd><p>the Shiny element that contains all the UI elements.
 The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 [htmltools::div()] is a reasonable choice.</p></dd>
+
+
+<dt>code_length</dt>
+<dd><p>the number of digits of codes emailed for creating accounts
+(if `verify_email == TRUE`) or resetting passwords.</p></dd>
 
 </dl></div>
     <div class="section level2">
