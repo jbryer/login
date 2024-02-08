@@ -32,7 +32,7 @@
     
     <a class="navbar-brand me-2" href="index.html">login</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,13 +71,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>This is certainly not the first (and probably not the last) authentication scheme for Shiny applications. <a href="https://datastorm-open.github.io/shinymanager/" class="external-link">ShinyManager</a> is a great solution if you want to protect the entire application (you pass your UI object so only authenticated users can view the application). The <a href="https://github.com/PaulC91/shinyauthr?tab=readme-ov-file" class="external-link"><code>shinyauthr</code></a> is another excellent package for providing simple user authentication. This package offers a number of features those packages do not, including:</p>
-<ul>
-<li>The ability for a users to create their own account.</li>
-<li>The ability for users to reset their password using an email system.</li>
-<li>UI elements to control what is visible when logged in or not logged in.</li>
-<li>Encrypting of the users’ passwords client side (i.e. the Shiny server only sees the encrypted password using MD5).</li>
-</ul>
+<p>This package provides a framework for adding user authentication to <a href="https://shiny.posit.co" class="external-link">Shiny</a> applications. This is unique to other authentication frameworks such as <a href="https://datastorm-open.github.io/shinymanager/" class="external-link">ShinyManager</a> and <a href="https://github.com/PaulC91/shinyauthr?tab=readme-ov-file" class="external-link">shinyauthr</a> in that it provides tools for users to create their own accounts and reset passwords. This is particularly useful for Shiny applications used to collect data without a pre-existing user management system. User credentials are stored in any database that supports the <a href="https://dbi.r-dbi.org" class="external-link">DBI</a> interface. Passwords are hashed using MD5 in the browser so the unhashed password is never available to the Shiny server. For an extra layer of security, you can <a href="https://en.wikipedia.org/wiki/Salt_(cryptography)" class="external-link">salt</a> the password before storing it in the database.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -88,42 +82,126 @@
 <div class="section level2">
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>There is a template located at <a href="inst/login_template/app.R"><code>inst/login_template/app.R</code></a> that demonstrates the basic functionality. At minimum you need to call the <code><a href="reference/login_ui.html">login_ui()</a></code> function in your UI. This will create a login box. This will also ensure the JavaScript and CSS assets are loaded to ensure the password is encrypted client size. It is important that you use the same <code>id</code> across all <code>login</code> functions.</p>
+<p>There is a template located at <a href="inst/login_template/app.R"><code>inst/login_template/app.R</code></a> that demonstrates the basic functionality. You can copy-and-paste this template for starting a new Shiny application with authentication. The following sections will describe the various functions required for the authentication to work.</p>
+<div class="section level3">
+<h3 id="shiny-server">Shiny Server<a class="anchor" aria-label="anchor" href="#shiny-server"></a>
+</h3>
+<p>The <code><a href="reference/login_server.html">login_server()</a></code> function handles all the server side functionality and must be added to your Shiny server function. The following examples provides the basic functionality using a SQLite database and a basic SMTP email server.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="reference/login_ui.html">login_ui</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">'login_demo'</span><span class="op">)</span></span></code></pre></div>
-<p>To add a log out button use the <code><a href="reference/logout_ui.html">logout_ui()</a></code> function. Note that the button will only display if you are logged in.</p>
+<code class="sourceCode R"><span><span class="va">APP_ID</span> <span class="op">&lt;-</span> <span class="st">'my_login_app'</span> <span class="co"># It is recommended that this is defined in global.R</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="reference/logout_ui.html">logout_ui</a></span><span class="op">(</span><span class="st">'login_demo'</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="reference/is_logged_in.html">is_logged_in()</a></code> and <code><a href="reference/is_not_logged_in.html">is_not_logged_in()</a></code> functions allow you encapsulate Shiny UI elements so they are only visible when the user is or is not logged in, respectively.</p>
+<code class="sourceCode R"><span><span class="va">USER</span> <span class="op">&lt;-</span> <span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="reference/login_server.html">login_server</a></span><span class="op">(</span></span>
+<span>    id <span class="op">=</span> <span class="va">APP_ID</span>,</span>
+<span>    db_conn <span class="op">=</span> <span class="fu">RSQLite</span><span class="fu">::</span><span class="fu">dbConnect</span><span class="op">(</span><span class="fu">RSQLite</span><span class="fu">::</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">'users.sqlite'</span><span class="op">)</span>,</span>
+<span>    emailer <span class="op">=</span> <span class="fu"><a href="reference/emayili_emailer.html">emayili_emailer</a></span><span class="op">(</span></span>
+<span>        email_host <span class="op">=</span> <span class="va">email_host</span>,</span>
+<span>        email_port <span class="op">=</span> <span class="va">email_port</span>,</span>
+<span>        email_username <span class="op">=</span> <span class="va">email_username</span>,</span>
+<span>        email_password <span class="op">=</span> <span class="va">email_password</span>,</span>
+<span>        from_email <span class="op">=</span> <span class="va">reset_password_from_email</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    additional_fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'first_name'</span> <span class="op">=</span> <span class="st">'First Name'</span>,</span>
+<span>                          <span class="st">'last_name'</span> <span class="op">=</span> <span class="st">'Last Name'</span><span class="op">)</span>,</span>
+<span>    salt <span class="op">=</span> <span class="va">APP_ID</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The <code>APP_ID</code> must be a unique identifier for the Shiny module. It is possible to have more than one <code>login</code> module per Shiny application. For this example, we are only using one and it is important to use the same ID for all server and UI components.</p>
+<p>The <code><a href="reference/login_server.html">login_server()</a></code> returns a <code><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html" class="external-link">shiny::reactiveValues()</a></code> object with two elements you can use: <code>logged_in</code> which is TRUE if the user is logged in or FALSE otherwise and <code>username</code> which contains the username when logged in.</p>
+<p>The <code>db_conn</code> parameter can take any database connection from the <a href="https://dbi.r-dbi.org" class="external-link"><code>DBI</code> R package</a>.</p>
+<p>The <code>emailer</code> parameter is a function with three parameters: <code>to_email</code>, <code>subject</code>, and <code>message</code>. The <code>emayili_emailer</code> is a helper function that wraps the <a href="https://datawookie.github.io/emayili/" class="external-link"><code>emayili</code> R package</a> for sending emails through SMTP. The source code for this function is included below to serve as a template for wrapping other methods of sending email.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">emayili_emailer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>        <span class="va">email_host</span> <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        <span class="va">email_port</span> <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        <span class="va">email_username</span> <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        <span class="va">email_password</span> <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        <span class="va">from_email</span> <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw">function</span><span class="op">(</span><span class="va">to_email</span>, <span class="va">subject</span>, <span class="va">message</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">email</span> <span class="op">&lt;-</span> <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/envelope.html" class="external-link">envelope</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/addresses.html" class="external-link">from</a></span><span class="op">(</span><span class="va">from_email</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/addresses.html" class="external-link">to</a></span><span class="op">(</span><span class="va">to_email</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/subject.html" class="external-link">subject</a></span><span class="op">(</span><span class="va">subject</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">message</span><span class="op">)</span></span>
+<span>        <span class="va">smtp</span> <span class="op">&lt;-</span> <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/server.html" class="external-link">server</a></span><span class="op">(</span></span>
+<span>            <span class="va">email_host</span>,</span>
+<span>            <span class="va">email_port</span>,</span>
+<span>            <span class="va">email_username</span>,</span>
+<span>            <span class="va">email_password</span></span>
+<span>        <span class="op">)</span></span>
+<span>        <span class="fu">smtp</span><span class="op">(</span><span class="va">email</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>The <code>additional_fields</code> is a character vector defining other data that will be collected when users create an account. These data are not used by the <code>login</code> package but will be stored in the users table (defined by the <code>users_table</code> parameter). The values will be used as the input labels and the names will the column names.</p>
+<p>The <code>salt</code> parameter defines an extra layer encryption for storing the passwords in the database. At minimum, passwords are hashed using a MD5 algorithm. More details are provided below.</p>
+</div>
+<div class="section level3">
+<h3 id="shiny-ui">Shiny UI<a class="anchor" aria-label="anchor" href="#shiny-ui"></a>
+</h3>
+<p>On the UI side only the <code><a href="reference/login_ui.html">login_ui()</a></code> function is required. This will create a login box. This will also ensure the JavaScript and CSS assets are loaded to ensure the password is encrypted client size. It is important that you use the same <code>id</code> across all <code>login</code> functions.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="reference/login_ui.html">login_ui</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">APP_ID</span><span class="op">)</span></span></code></pre></div>
+<figure><img src="reference/figures/screenshot_login.png" alt="Screenshot for logging in"><figcaption aria-hidden="true">
+Screenshot for logging in
+</figcaption></figure><p>To add a log out button use the <code><a href="reference/logout_button.html">logout_button()</a></code> function. This will only display if you are logged in. You can customize the button using the <code>label</code>, <code>icon</code>, and <code>style</code> parameters which are passed to the <code><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">shiny::actionButton()</a></code> function.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="reference/logout_button.html">logout_button</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">APP_ID</span><span class="op">)</span></span></code></pre></div>
+<p>Optionally, you can write your logout procedure by setting <code>USER$logged_in &lt;- FALSE</code> in the server logic.</p>
+<p>The <code><a href="reference/new_user_ui.html">new_user_ui()</a></code> function will provide an interface for users to create a new account. If the <code>emailer</code> parameter is set for <code><a href="reference/login_server.html">login_server()</a></code> and <code>verify_email = TRUE</code> then users will need to verify their email address before the account is created. This is done by sending a code (six digits by default) to the email address that they need to enter.</p>
+<figure><img src="reference/figures/screenshot_new_account.png" alt="Screenshot for creating a new account"><figcaption aria-hidden="true">
+Screenshot for creating a new account
+</figcaption></figure><p>The <code><a href="reference/reset_password_ui.html">reset_password_ui()</a></code> function provides UI elements for users to reset their password. This requires that the <code>emailer</code> parameter has been set for the <code><a href="reference/login_server.html">login_server()</a></code> function. Users enter their email address and request a code. Once the code has been sent the UI will changed asking the user to enter the code emailed to them. If they enter the correct code they can then enter a new password.</p>
+<figure><img src="reference/figures/screenshot_reset_password1.png" alt="Screenshot of step one for resetting a password"><figcaption aria-hidden="true">
+Screenshot of step one for resetting a password
+</figcaption></figure><figure><img src="reference/figures/screenshot_reset_password2.png" alt="Screenshot of step two for resetting a password"><figcaption aria-hidden="true">
+Screenshot of step two for resetting a password
+</figcaption></figure><figure><img src="reference/figures/screenshot_reset_password3.png" alt="Screenshot of step three for resetting a password"><figcaption aria-hidden="true">
+Screenshot of step three for resetting a password
+</figcaption></figure><p>The <code><a href="reference/is_logged_in.html">is_logged_in()</a></code> and <code><a href="reference/is_not_logged_in.html">is_not_logged_in()</a></code> functions allow you encapsulate Shiny UI elements so they are only visible when the user is or is not logged in, respectively.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="reference/is_logged_in.html">is_logged_in</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="st">'login_demo'</span>,</span>
+<span>  id <span class="op">=</span> <span class="va">APP_ID</span>,</span>
 <span>  <span class="fu">div</span><span class="op">(</span><span class="st">"This only shows when you are logged in!"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="reference/is_not_logged_in.html">is_not_logged_in</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="st">'login_demo'</span>,</span>
+<span>  id <span class="op">=</span> <span class="va">APP_ID</span>,</span>
 <span>  <span class="fu">div</span><span class="op">(</span><span class="st">"This only shows when you are NOT logged in!"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
 <div class="section level2">
-<h2 id="my-wish-list">My Wish List<a class="anchor" aria-label="anchor" href="#my-wish-list"></a>
+<h2 id="salting">Salting<a class="anchor" aria-label="anchor" href="#salting"></a>
 </h2>
-<p>List of features I hope to add soon (here for my own regulation):</p>
-<ul>
-<li>Abstract out data storage to allow for systems other than DBI.</li>
-<li><del>Abstract out emailing (currently only used to reset passwords).</del></li>
-<li><del>Have an option to require email verification for creating an account.</del></li>
-<li><del>Allow for the collection of other metadata at time of user creation.</del></li>
-<li>Have the ability of assigning users to groups.</li>
-<li><del>Save user login using cookies.</del></li>
-<li><del>Add created_date to new accounts.</del></li>
-</ul>
+<p>Salting is the process of adding an additional input to the hash to guard against attacks using precomputed tables of passwords. The <code><a href="reference/login_server.html">login_server()</a></code> function has two parameters to control salting: the <code>salt</code> parameter defines the word or phrase that will be concatenated to the password and <code>salt_algo</code> defines the algorithm used to encrypt the password (by default the <code>sha512</code> algorithm will be used). The <code><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest::digest()</a></code> function is used and you can consult the documentation for details on the hashing algorithms.</p>
+<p>Consider, for example, a user who uses “test” for their password and the <code>login_server</code> has been configured to use “login_demo” for the salt.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">password</span> <span class="op">&lt;-</span> <span class="st">"test"</span></span>
+<span><span class="va">salt</span> <span class="op">&lt;-</span> <span class="va">APP_ID</span></span></code></pre></div>
+<p>The password is hashed using the md5 algorithm by the browser before being sent to the Shiny server. Without specifying a salt, this is the password that would be stored in the database.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">password_md5</span> <span class="op">&lt;-</span> <span class="fu">digest</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest</a></span><span class="op">(</span><span class="va">password</span>, algo <span class="op">=</span> <span class="st">'md5'</span>, serialize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span></code></pre></div>
+<p>However, sense we specified a salt, the following hash is what will be stored in the database.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">salt</span>, <span class="va">password_md5</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">digest</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest</a></span><span class="op">(</span>algo <span class="op">=</span> <span class="st">'sha512'</span>, serialize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; [1] "d86d29e1c61ec2fb11debbc1ea9b260f73d94a1e044964bd62eede36cbe99136c92431a0269555df7399cc939aa8f9a4364daa23d3c21f838f0d309f62ce3913"</span></span></code></pre></div>
+<p>Although the password is encrypted client side it is recommended that you configure your Shiny server to use https. This can be done using Posit’s enterprise solutions or configure Shiny server behind another webserver such as <a href="https://www.nginx.com" class="external-link">nginx</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="user-management-outside-of-the-login-module">User management outside of the <code>login</code> module<a class="anchor" aria-label="anchor" href="#user-management-outside-of-the-login-module"></a>
+</h2>
+<p>One of the primary motivating factors for creating this package was to have an authentication framework where users can create and manage their own accounts. However, it is possible to use only the login feature and manage users through your own custom code. However, it will require hashing the password before storing in the database. The following command using the <code><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest::digest()</a></code> function will produced the same hash as the MD5 algorithm run in the users browser. If you wish to salt the passwords an additional step will be required as described in the salting section above.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">password_md5</span> <span class="op">&lt;-</span> <span class="fu">digest</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest</a></span><span class="op">(</span><span class="va">password</span>, algo <span class="op">=</span> <span class="st">'md5'</span>, serialize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
+</h2>
+<p>This package relies on the work of <a href="https://github.com/withr" class="external-link">Huidong Tian</a> who wrote the JavaScript code to hash the passwords client side. The original code is available here: <a href="https://gist.github.com/withr/9001831" class="external-link uri">https://gist.github.com/withr/9001831</a></p>
 </div>
 <div class="section level2">
 <h2 id="disclaimer">Disclaimer<a class="anchor" aria-label="anchor" href="#disclaimer"></a>
 </h2>
-<p>I am not a security expert. I have made every effort to use the best practices to my knowledge. I highly recommend deploying your application using https (e.g. use nginx and letsencrypt) to ensure all communication between the client and server are encrypted. Any issues or concerns can be filed as a Github issue. Use at your own risk.</p>
+<p>I am not a security expert. I have made every effort to use the best practices as I understand them. I highly recommend deploying your application using https (e.g. use nginx and letsencrypt) to ensure all communication between the client and server are encrypted. Any issues or concerns can be filed as a Github issue. Use at your own risk.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -161,7 +239,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://github.com/jbryer/login" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.5.1-blue.svg"></a></li>
+<li><a href="https://github.com/jbryer/login" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.9.0-blue.svg"></a></li>
 <li><a href="https://cran.r-project.org/package=login" class="external-link"><img src="https://www.r-pkg.org/badges/version/login"></a></li>
 <li><a href="https://doi.org/10.5281/zenodo.10633322" class="external-link"><img src="https://img.shields.io/badge/doi-10.5281/zenodo.10633322-blue.svg"></a></li>
 </ul>
