@@ -6,15 +6,17 @@ editor_options:
   chunk_output_type: console
 ---
 
-# <img src="man/figures/login_hex.png" align="right" width="120" align="right" /> `login`: User authentication for Shiny applications
+# <img src="man/figures/login_hex.png" align="right" width="120" align="right" /> login: User Authentication for Shiny Applications
 
 **Author:** Jason Bryer, Ph.D. jason@bryer.org  
 **Website:** https://github.com/jbryer/login/
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml)
-`r badger::badge_devel("jbryer/login", "blue")`
+`r badger::badge_devel("jbryer/login", color = "blue")`
 `r badger::badge_cran_release("login")`
+`r badger::badge_doi('10.5281/zenodo.10633322', color = 'blue')`
+
 <!-- badges: end -->
 
 

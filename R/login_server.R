@@ -140,6 +140,7 @@ login_server <- function(
 			if(!is.null(username)) {
 				USER$username <- username
 				USER$logged_in <- TRUE
+				add_activitiy(username, 'login_cookie')
 			}
 		})#, once = TRUE)
 

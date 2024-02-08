@@ -1,5 +1,5 @@
 
-# <img src="man/figures/login_hex.png" align="right" width="120" align="right" /> `login`: User authentication for Shiny applications
+# <img src="man/figures/login_hex.png" align="right" width="120" align="right" /> login: User Authentication for Shiny Applications
 
 **Author:** Jason Bryer, Ph.D. <jason@bryer.org>  
 **Website:** <https://github.com/jbryer/login/>
@@ -7,8 +7,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml)
-[![](https://img.shields.io/badge/devel%20version-0.5.0-blue.svg)](https://github.com/jbryer/login)
+[![](https://img.shields.io/badge/devel%20version-0.5.1-blue.svg)](https://github.com/jbryer/login)
 [![](https://www.r-pkg.org/badges/version/login)](https://cran.r-project.org/package=login)
+[![](https://img.shields.io/badge/doi-10.5281/zenodo.10633322-blue.svg)](https://doi.org/10.5281/zenodo.10633322)
+
 <!-- badges: end -->
 
 This is certainly not the first (and probably not the last)
@@ -88,7 +90,6 @@ List of features I hope to add soon (here for my own regulation):
 - ~~Allow for the collection of other metadata at time of user
   creation.~~
 - Have the ability of assigning users to groups.
-- Provide more options to adjust the appearance of UI.
 - ~~Save user login using cookies.~~
 - ~~Add created_date to new accounts.~~
 
