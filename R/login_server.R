@@ -142,7 +142,7 @@ login_server <- function(
 				USER$logged_in <- TRUE
 				add_activitiy(username, 'login_cookie')
 			}
-		})#, once = TRUE)
+		}, once = TRUE)
 
 		##### User Login #######################################################
 		login_message <- reactiveVal('')
