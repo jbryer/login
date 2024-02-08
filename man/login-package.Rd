@@ -6,8 +6,7 @@
 \alias{login-package}
 \title{Shiny Login Module.}
 \description{
-This R package was modified from Huidong Tian's
-original script located here: https://gist.github.com/withr/9001831
+Fromework for adding authentication to Shiny applications. Provides flexibility as compared to other options for where user credientials are saved, allows users to create their own accounts, and password reset functionality.
 }
 \seealso{
 Useful links:

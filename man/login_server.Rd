@@ -77,7 +77,7 @@ The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 
 \item{salt}{a salt to use to encrypt the password before storing it in the database.}
 
-\item{salt_alg}{the algorithm used to encrypt the password. See
+\item{salt_algo}{the algorithm used to encrypt the password. See
 [digest::digest()] for more details.}
 }
 \value{

@@ -34,7 +34,7 @@
 #' @param code_length the number of digits of codes emailed for creating accounts
 #'        (if `verify_email == TRUE`) or resetting passwords.
 #' @param salt a salt to use to encrypt the password before storing it in the database.
-#' @param salt_alg the algorithm used to encrypt the password. See
+#' @param salt_algo the algorithm used to encrypt the password. See
 #'        [digest::digest()] for more details.
 #' @return a [shiny::reactiveValues()] object that includes two values: `logged_in`
 #'        (this is TRUE if the user is logged in) and `username` which has the
