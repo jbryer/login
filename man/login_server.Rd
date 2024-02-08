@@ -17,8 +17,8 @@ login_server(
   username_label = "Email:",
   password_label = "Password:",
   create_account_label = "Create Account",
-  create_account_message,
-  reset_email_message
+  create_account_message = NULL,
+  reset_email_message = NULL
 )
 }
 \arguments{
