@@ -26,3 +26,7 @@ LazyData: true
 RoxygenNote: 7.2.3
 URL: https://github.com/jbryer/login, https://jbryer.github.io/login/
 BugReports: https://github.com/jbryer/login/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -8,3 +8,4 @@ build.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+manuscript/

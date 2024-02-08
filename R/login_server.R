@@ -52,7 +52,7 @@ login_server <- function(
 ) {
 	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
 	if(is.null(create_account_message)) {
-		create_account_message < 'Your confirmation code to create a new account is: %s\n
+		create_account_message <- 'Your confirmation code to create a new account is: %s\n
 		     If you did not request to create a new account you can ignore this email.'
 	}
 	if(is.null(reset_email_message)) {
@@ -255,9 +255,10 @@ login_server <- function(
 					tryCatch({
 						emailer(to_email = username,
 								subject = new_account_subject,
-								message = sprintf(create_account_message, 2112))
+								message = sprintf(create_account_message, code))
 						new_user_code_verify(code)
 					}, error = function(e) {
+						print(e)
 						reset_message(paste0('Error sending email: ', as.character(e)))
 					})
 
@@ -293,10 +294,11 @@ login_server <- function(
 				email_address <- newuser[1,]$username
 				emailer(to_email = email_address,
 						subject = new_account_subject,
-						message = sprintf(create_account_message, 2112))
+						message = sprintf(create_account_message, code))
 				new_user_code_verify(code)
 				new_user_message('A new code has been sent.')
 			}, error = function(e) {
+				print(e)
 				reset_message(paste0('Error sending email: ', as.character(e)))
 			})
 		})
