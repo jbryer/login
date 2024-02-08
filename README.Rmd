@@ -47,7 +47,7 @@ remotes::install_github('jbryer/login')
 
 There is a template located at [`inst/login_template/app.R`](inst/login_template/app.R) that demonstrates the basic functionality. You can copy-and-paste this template for starting a new Shiny application with authentication. The following sections will describe the various functions required for the authentication to work.
 
-### Shiny Server
+## Shiny Server
 
 The `login_server()` function handles all the server side functionality and must be added to your Shiny server function. The following examples provides the basic functionality using a SQLite database and a basic SMTP email server.
 
@@ -109,7 +109,7 @@ The `additional_fields` is a character vector defining other data that will be c
 
 The `salt` parameter defines an extra layer encryption for storing the passwords in the database. At minimum, passwords are hashed using a MD5 algorithm. More details are provided below.
 
-### Shiny UI
+## Shiny UI
 
 On the UI side only the `login_ui()` function is required. This will create a login box. This will also ensure the JavaScript and CSS assets are loaded to ensure the password is encrypted client size. It is important that you use the same `id` across all `login` functions.
 
@@ -139,8 +139,21 @@ The `reset_password_ui()` function provides UI elements for users to reset their
 
 ![Screenshot of step three for resetting a password](man/figures/screenshot_reset_password3.png)
 
+## Adapting your Shiny application to the user
 
-The `is_logged_in()` and `is_not_logged_in()` functions allow you encapsulate Shiny UI elements so they are only visible when the user is or is not logged in, respectively. 
+On the server side you check the value of `USER$logged_in`, for example, if you are rendering UI components on the server use the following pattern:
+
+```{r, eval=FALSE}
+output$my_ui <- renderUI({
+  if(USER$logged_in) {
+    # UI elements visible to users who are logged in.
+  } else {
+    # UI elements visible to users who are NOT logged in.
+  }
+})
+```
+
+On the UI side, the `is_logged_in()` and `is_not_logged_in()` functions allow you encapsulate Shiny UI elements so they are only visible when the user is or is not logged in, respectively. 
 
 ```{r, eval=FALSE}
 login::is_logged_in(

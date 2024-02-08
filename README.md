@@ -46,7 +46,7 @@ template for starting a new Shiny application with authentication. The
 following sections will describe the various functions required for the
 authentication to work.
 
-### Shiny Server
+## Shiny Server
 
 The `login_server()` function handles all the server side functionality
 and must be added to your Shiny server function. The following examples
@@ -129,7 +129,7 @@ The `salt` parameter defines an extra layer encryption for storing the
 passwords in the database. At minimum, passwords are hashed using a MD5
 algorithm. More details are provided below.
 
-### Shiny UI
+## Shiny UI
 
 On the UI side only the `login_ui()` function is required. This will
 create a login box. This will also ensure the JavaScript and CSS assets
@@ -200,9 +200,25 @@ alt="Screenshot of step three for resetting a password" />
 password</figcaption>
 </figure>
 
-The `is_logged_in()` and `is_not_logged_in()` functions allow you
-encapsulate Shiny UI elements so they are only visible when the user is
-or is not logged in, respectively.
+## Adapting your Shiny application to the user
+
+On the server side you check the value of `USER$logged_in`, for example,
+if you are rendering UI components on the server use the following
+pattern:
+
+``` r
+output$my_ui <- renderUI({
+  if(USER$logged_in) {
+    # UI elements visible to users who are logged in.
+  } else {
+    # UI elements visible to users who are NOT logged in.
+  }
+})
+```
+
+On the UI side, the `is_logged_in()` and `is_not_logged_in()` functions
+allow you encapsulate Shiny UI elements so they are only visible when
+the user is or is not logged in, respectively.
 
 ``` r
 login::is_logged_in(
