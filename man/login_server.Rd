@@ -19,7 +19,8 @@ login_server(
   create_account_label = "Create Account",
   create_account_message = NULL,
   reset_email_message = NULL,
-  enclosing_panel = shiny::wellPanel
+  enclosing_panel = shiny::wellPanel,
+  code_length = 6
 )
 }
 \arguments{
@@ -64,6 +65,9 @@ somewhere in the message to include the code.}
 \item{enclosing_panel}{the Shiny element that contains all the UI elements.
 The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 [htmltools::div()] is a reasonable choice.}
+
+\item{code_length}{the number of digits of codes emailed for creating accounts
+(if `verify_email == TRUE`) or resetting passwords.}
 }
 \value{
 a [shiny::reactiveValues()] object that includes two values: `logged_in`

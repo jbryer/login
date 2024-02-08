@@ -29,6 +29,8 @@
 #' @param enclosing_panel the Shiny element that contains all the UI elements.
 #'        The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 #'        [htmltools::div()] is a reasonable choice.
+#' @param code_length the number of digits of codes emailed for creating accounts
+#'        (if `verify_email == TRUE`) or resetting passwords.
 #' @return a [shiny::reactiveValues()] object that includes two values: `logged_in`
 #'        (this is TRUE if the user is logged in) and `username` which has the
 #'        user's login username if logged in.
@@ -53,7 +55,8 @@ login_server <- function(
 		create_account_label = "Create Account",
 		create_account_message = NULL,
 		reset_email_message = NULL,
-		enclosing_panel = shiny::wellPanel
+		enclosing_panel = shiny::wellPanel,
+		code_length = 6
 ) {
 	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
 	if(is.null(create_account_message)) {
@@ -98,7 +101,7 @@ login_server <- function(
 		}
 
 		generate_code <- function() {
-			sample(999999, size = 1) |>
+			sample(10 ^ code_length - 1, size = 1) |>
 				as.character() |>
 				stringr::str_pad(width = 6, pad = '0')
 		}
