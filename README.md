@@ -23,8 +23,8 @@ reset passwords. This is particularly useful for Shiny applications used
 to collect data without a pre-existing user management system. User
 credentials are stored in any database that supports the
 [DBI](https://dbi.r-dbi.org) interface. Passwords are hashed using MD5
-in the browser so the unhashed password is never available to the Shiny
-server. For an extra layer of security, you can
+in the browser so that unencrypted passwords are never available to the
+Shiny server. For an extra layer of security, you can
 [salt](https://en.wikipedia.org/wiki/Salt_(cryptography)) the password
 before storing it in the database.
 
