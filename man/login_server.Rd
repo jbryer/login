@@ -15,6 +15,7 @@ login_server(
   verify_email = !is.null(emailer),
   additional_fields = NULL,
   cookie_name = "loginusername",
+  cookie_expiration = 30,
   username_label = "Email:",
   password_label = "Password:",
   create_account_label = "Create Account",
@@ -55,6 +56,8 @@ vector correspond to the variable names and the values will be used
 as the input labels.}
 
 \item{cookie_name}{the name of the cookie saved. Set to `NULL` to disable cookies.}
+
+\item{cookie_expiration}{the number of days after which the cookie will expire.}
 
 \item{username_label}{label used for text inputs of username.}
 

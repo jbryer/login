@@ -70,6 +70,7 @@ USER <- login::login_server(
     ),
     additional_fields = c('first_name' = 'First Name',
                           'last_name' = 'Last Name'),
+    cookie_name = 'loginusername',
     salt = APP_ID
 )
 ```
@@ -124,6 +125,11 @@ will be collected when users create an account. These data are not used
 by the `login` package but will be stored in the users table (defined by
 the `users_table` parameter). The values will be used as the input
 labels and the names will the column names.
+
+The `cookie_username` specifies the name of the cookie saved so users do
+not have to enter the username and password os subsequent visits. Set
+this to NULL to disable cookies. Users can still opt out of cookies by
+not checking the “Remmeber me” checkbox in the login UI.
 
 The `salt` parameter defines an extra layer encryption for storing the
 passwords in the database. At minimum, passwords are hashed using a MD5

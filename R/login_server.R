@@ -24,6 +24,7 @@
 #' @param password_label label used for text inputs of password.
 #' @param create_account_label label for the create account button.
 #' @param cookie_name the name of the cookie saved. Set to `NULL` to disable cookies.
+#' @param cookie_expiration the number of days after which the cookie will expire.
 #' @param create_account_message Email message sent to confirm email when creating
 #'        a new account. Include `\%s` somewhere in the message to include the code.
 #' @param reset_email_message Email message sent to reset password. Include `\%s`
@@ -57,6 +58,7 @@ login_server <- function(
 		verify_email = !is.null(emailer),
 		additional_fields = NULL,
 		cookie_name = 'loginusername',
+		cookie_expiration = 30,
 		username_label = 'Email:',
 		password_label = 'Password:',
 		create_account_label = "Create Account",
@@ -200,7 +202,8 @@ login_server <- function(
 					if(input$remember_me) {
 						cookies::set_cookie(cookie_name = cookie_name,
 											cookie_value = username,
-											session = session)
+											session = session,
+											experiation = cookie_expiration)
 					}
 				}
 				login_message('')
