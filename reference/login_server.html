@@ -59,6 +59,7 @@
 <span>  verify_email <span class="op">=</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">emailer</span><span class="op">)</span>,</span>
 <span>  additional_fields <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cookie_name <span class="op">=</span> <span class="st">"loginusername"</span>,</span>
+<span>  cookie_expiration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  username_label <span class="op">=</span> <span class="st">"Email:"</span>,</span>
 <span>  password_label <span class="op">=</span> <span class="st">"Password:"</span>,</span>
 <span>  create_account_label <span class="op">=</span> <span class="st">"Create Account"</span>,</span>
@@ -120,6 +121,10 @@ as the input labels.</p></dd>
 
 <dt>cookie_name</dt>
 <dd><p>the name of the cookie saved. Set to `NULL` to disable cookies.</p></dd>
+
+
+<dt>cookie_expiration</dt>
+<dd><p>the number of days after which the cookie will expire.</p></dd>
 
 
 <dt>username_label</dt>

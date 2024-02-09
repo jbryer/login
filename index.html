@@ -103,6 +103,7 @@
 <span>    <span class="op">)</span>,</span>
 <span>    additional_fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'first_name'</span> <span class="op">=</span> <span class="st">'First Name'</span>,</span>
 <span>                          <span class="st">'last_name'</span> <span class="op">=</span> <span class="st">'Last Name'</span><span class="op">)</span>,</span>
+<span>    cookie_name <span class="op">=</span> <span class="st">'loginusername'</span>,</span>
 <span>    salt <span class="op">=</span> <span class="va">APP_ID</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The <code>APP_ID</code> must be a unique identifier for the Shiny module. It is possible to have more than one <code>login</code> module per Shiny application. For this example, we are only using one and it is important to use the same ID for all server and UI components.</p>
@@ -133,6 +134,7 @@
 <span>    <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>The <code>additional_fields</code> is a character vector defining other data that will be collected when users create an account. These data are not used by the <code>login</code> package but will be stored in the users table (defined by the <code>users_table</code> parameter). The values will be used as the input labels and the names will the column names.</p>
+<p>The <code>cookie_username</code> specifies the name of the cookie saved so users do not have to enter the username and password os subsequent visits. Set this to NULL to disable cookies. Users can still opt out of cookies by not checking the “Remmeber me” checkbox in the login UI.</p>
 <p>The <code>salt</code> parameter defines an extra layer encryption for storing the passwords in the database. At minimum, passwords are hashed using a MD5 algorithm. More details are provided below.</p>
 </div>
 <div class="section level2">
