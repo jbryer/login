@@ -203,7 +203,7 @@ login_server <- function(
 						cookies::set_cookie(cookie_name = cookie_name,
 											cookie_value = username,
 											session = session,
-											experiation = cookie_expiration)
+											expiration = cookie_expiration)
 					}
 				}
 				login_message('')
