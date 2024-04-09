@@ -8,7 +8,8 @@ logout_button(
   id,
   label = "Logout",
   icon = shiny::icon("right-from-bracket"),
-  style = ""
+  style = "",
+  check_login = TRUE
 )
 }
 \arguments{
@@ -19,7 +20,9 @@ logout_button(
 \item{icon}{icon for the logout button.}
 
 \item{style}{CSS styles for the logout button.}
+
+\item{check_login}{if TRUE this will call [login::is_logged_in()].}
 }
 \description{
-Logout button.
+Render a button for the user to logout.
 }

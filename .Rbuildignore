@@ -9,3 +9,5 @@ build.R
 ^docs$
 ^pkgdown$
 manuscript/
+inst/slides/
+^cran-comments\.md$

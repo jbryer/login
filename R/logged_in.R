@@ -1,5 +1,8 @@
 #' Display Shiny elements only if the user is logged in.
 #'
+#' This function can be used on the Shiny UI side. It will check to see if the user
+#' is logged in, if so the other Shiny elements will be displayed.
+#'
 #' @param id id unique ID for the Shiny Login module.
 #' @param ... Shiny UI elements.
 #' @return a [@shiny::conditionalPanel()]
@@ -14,6 +17,9 @@ is_logged_in <- function(id, ...) {
 }
 
 #' Display Shiny elements only if the user is not logged in.
+#'
+#' This function can be used on teh Shiny UI side. It will. check to see if the
+#' user is not logged in, if so the other Shiny elements will be displayed.
 #'
 #' @param id id unique ID for the Shiny Login module.
 #' @param ... Shiny UI elements.

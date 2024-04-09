@@ -1,6 +1,6 @@
 #' Returns a function to send emails using the `emayili` package.
 #'
-#' This returns a function that can be used with the [login_server()]. Specfically,
+#' This returns a function that can be used with the [login_server()]. Specifically,
 #' the function takes two parameters, `to_email` and `message`.
 #'
 #' @seealso [login_server()]
@@ -9,6 +9,7 @@
 #' @param email_port SMPT email port.
 #' @param email_username username for the SMTP server.
 #' @param email_password password for the SMTP server.
+#' @return returns a [emayili::server()] object.
 #' @importFrom emayili envelope from to subject text server
 #' @export
 emayili_emailer <- function(

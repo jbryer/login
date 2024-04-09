@@ -89,5 +89,6 @@ a [shiny::reactiveValues()] object that includes two values: `logged_in`
        user's login username if logged in.
 }
 \description{
-This is the main server logic for the `login` Shiny module.
+This is the main server logic for the `login` Shiny module to be included
+in server.R side,.
 }

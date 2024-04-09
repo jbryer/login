@@ -1,5 +1,8 @@
 #' Login UI elements.
 #'
+#' This will render (if the user is not logged in) text boxes and buttons for
+#' the user to login.
+#'
 #' @param id id unique ID for the Shiny Login module.
 #' @export
 login_ui <- function(id) {
@@ -13,7 +16,7 @@ login_ui <- function(id) {
 			htmltools::attachDependencies(
 				x = uiOutput(NS(id, 'login_ui')),
 				value = dependencies,
-				append = TRUE
+				append = FALSE
 			)
 		)
 	)

@@ -6,7 +6,8 @@
 \alias{login-package}
 \title{Shiny Login Module.}
 \description{
-Fromework for adding authentication to Shiny applications. Provides flexibility as compared to other options for where user credientials are saved, allows users to create their own accounts, and password reset functionality.
+This package provides a Shiny module for adding user authentication to
+applications.
 }
 \seealso{
 Useful links:

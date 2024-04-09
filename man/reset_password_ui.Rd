@@ -10,5 +10,7 @@ reset_password_ui(id)
 \item{id}{id unique ID for the Shiny Login module.}
 }
 \description{
-UI for resetting password.
+Displays UI for users to reset their password. In order for the password
+reset feature to work credentials to a SMTP server must be passed to the
+[login::login_server()] function.
 }

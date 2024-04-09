@@ -1,5 +1,7 @@
 #' Shiny Login Module.
 #'
+#' This package provides a Shiny module for adding user authentication to
+#' applications.
 #'
 #' @import shiny
 #' @keywords internal

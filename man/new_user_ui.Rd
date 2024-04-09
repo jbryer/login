@@ -10,5 +10,5 @@ new_user_ui(id)
 \item{id}{id unique ID for the Shiny Login module.}
 }
 \description{
-UI for creating a new user account.
+This will render the UI for users to create an account.
 }

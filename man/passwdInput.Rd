@@ -13,6 +13,9 @@ passwdInput(inputId, label, value)
 
 \item{value}{default value.}
 }
+\value{
+a [shiny::tagList()] object.
+}
 \description{
 This is an extension to Shiny's built in passwordInput by encrpting the
 password client side before sending it to the server. Although it is encrypted

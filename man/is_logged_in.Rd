@@ -15,5 +15,6 @@ is_logged_in(id, ...)
 a [@shiny::conditionalPanel()]
 }
 \description{
-Display Shiny elements only if the user is logged in.
+This function can be used on the Shiny UI side. It will check to see if the user
+is logged in, if so the other Shiny elements will be displayed.
 }

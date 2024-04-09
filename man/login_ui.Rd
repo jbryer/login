@@ -10,5 +10,6 @@ login_ui(id)
 \item{id}{id unique ID for the Shiny Login module.}
 }
 \description{
-Login UI elements.
+This will render (if the user is not logged in) text boxes and buttons for
+the user to login.
 }

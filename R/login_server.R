@@ -1,6 +1,7 @@
 #' Login server module.
 #'
-#' This is the main server logic for the `login` Shiny module.
+#' This is the main server logic for the `login` Shiny module to be included
+#' in server.R side,.
 #'
 #' @param id unique ID for the Shiny Login module.
 #' @param db_conn a DBI database connection.

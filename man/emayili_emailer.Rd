@@ -23,8 +23,11 @@ emayili_emailer(
 
 \item{from_email}{the from email address sent from [login_server()].}
 }
+\value{
+returns a [emayili::server()] object.
+}
 \description{
-This returns a function that can be used with the [login_server()]. Specfically,
+This returns a function that can be used with the [login_server()]. Specifically,
 the function takes two parameters, `to_email` and `message`.
 }
 \seealso{
