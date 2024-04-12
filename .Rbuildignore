@@ -11,3 +11,6 @@ build.R
 manuscript/
 inst/slides/
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
+^doc$
+^Meta$

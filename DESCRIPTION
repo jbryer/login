@@ -2,14 +2,14 @@ Type: Package
 Package: login
 Title: Shiny Login Module
 Version: 0.9.1
-Date: 2024-04-09
+Date: 2024-04-11
 Authors@R: 
     person("Jason", "Bryer", , "jason@bryer.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2454-0402"))
 Maintainer: Jason Bryer <jason@bryer.org>
-Description: Fromework for adding authentication to Shiny applications.
+Description: Framework for adding authentication to Shiny applications.
     Provides flexibility as compared to other options for where user
-    credientials are saved, allows users to create their own accounts, and
+    credentials are saved, allows users to create their own accounts, and
     password reset functionality.
 License: GPL (>= 3)
 URL: https://github.com/jbryer/login, https://jbryer.github.io/login/

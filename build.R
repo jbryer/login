@@ -1,7 +1,8 @@
 # Build the package
 usethis::use_tidy_description()
 devtools::document()
-devtools::install(dependencies = FALSE)
+devtools::build_vignettes()
+devtools::install(build_vignettes = TRUE)
 
 # Run the Shiny demo app
 shiny::runApp('inst/login_template/', port = 2112)
@@ -9,9 +10,11 @@ shiny::runApp('inst/login_template/', port = 2112)
 # Run R CMD CHECK
 devtools::check()
 
+vignette('login', package = 'login')
+
 # usethis::use_pkgdown_github_pages()
 # usethis::use_github_action("README.Rmd")
-
+devtools::release()
 
 
 ##### Hex Logo #################################################################
