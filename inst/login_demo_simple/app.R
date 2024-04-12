@@ -6,7 +6,7 @@ ui <- fluidPage(
     titlePanel("Shiny Login Simple Demo"),
     p("You can login with 'test/test'."),
     login::login_ui(id = 'login_demo'),
-    login::logout_ui('login_demo'),
+    login::logout_button('login_demo'),
     hr(),
     div('Are you logged in? ', textOutput('is_logged_in')),
     div('Username: ', textOutput('username')),
@@ -45,4 +45,6 @@ server <- function(input, output, session) {
 }
 
 ##### Run the application ######################################################
-shinyApp(ui = ui, server = server)
+if(interactive()) {
+    shinyApp(ui = ui, server = server)
+}

@@ -84,11 +84,63 @@ The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 [digest::digest()] for more details.}
 }
 \value{
-a [shiny::reactiveValues()] object that includes two values: `logged_in`
+a `shiny::reactiveValues`` object that includes two values: `logged_in`
        (this is TRUE if the user is logged in) and `username` which has the
        user's login username if logged in.
 }
 \description{
 This is the main server logic for the `login` Shiny module to be included
 in server.R side,.
+}
+\examples{
+library(shiny)
+library(login)
+
+###### User Interface ##########################################################
+ui <- fluidPage(
+    titlePanel("Shiny Login Simple Demo"),
+    p("You can login with 'test/test'."),
+    login::login_ui(id = 'login_demo'),
+    login::logout_ui('login_demo'),
+    hr(),
+    div('Are you logged in? ', textOutput('is_logged_in')),
+    div('Username: ', textOutput('username')),
+    login::is_logged_in(
+        id = 'login_demo',
+        div("This only shows when you are logged in!")
+    ),
+    login::is_not_logged_in(
+        id = 'login_demo',
+        div("This only shows when you are NOT logged in!")
+    )
+)
+
+##### Server ###################################################################
+server <- function(input, output, session) {
+    USER <- login::login_server(
+        id = 'login_demo',
+        db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 'users.sqlite')
+    )
+
+    observeEvent(USER$logged_in, {
+        if(USER$logged_in) {
+            shinyjs::hide(id = 'login_box')
+        } else {
+            shinyjs::show(id = "login_box")
+        }
+    })
+
+    output$is_logged_in <- renderText({
+        USER$logged_in
+    })
+
+    output$username <- renderText({
+        USER$username
+    })
+}
+
+##### Run the application ######################################################
+if(interactive()) {
+    shinyApp(ui = ui, server = server)
+}
 }

@@ -28,5 +28,20 @@ Shiny server. For an extra layer of security, you can
 [salt](https://en.wikipedia.org/wiki/Salt_(cryptography)) the password
 before storing it in the database.
 
-Please see the vignette `vignette('login', package = 'login')` for more
+Please see the vignette `vignette('login', package = 'login')` or
+[website](https://jbryer.github.io/login/articles/login.html) for more
 details on how to use this package with your Shiny application.
+
+You can install the latest development version using the `remotes`
+package:
+
+``` r
+remotes::install_github('login')
+```
+
+Once installed, there are two demos included:
+
+``` r
+shiny::runApp('inst/login_demo_simple/', port = 2112)
+shiny::runApp('inst/login_template/', port = 2112)
+```

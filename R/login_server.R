@@ -38,7 +38,7 @@
 #' @param salt a salt to use to encrypt the password before storing it in the database.
 #' @param salt_algo the algorithm used to encrypt the password. See
 #'        [digest::digest()] for more details.
-#' @return a [shiny::reactiveValues()] object that includes two values: `logged_in`
+#' @return a `shiny::reactiveValues`` object that includes two values: `logged_in`
 #'        (this is TRUE if the user is logged in) and `username` which has the
 #'        user's login username if logged in.
 #' @import shiny
@@ -48,6 +48,7 @@
 #' @importFrom shinybusy show_modal_spinner remove_modal_spinner
 #' @importFrom digest digest
 #' @export
+#' @example inst/login_demo_simple/app.R
 login_server <- function(
 		id,
 		db_conn = NULL,

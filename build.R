@@ -5,6 +5,7 @@ devtools::build_vignettes()
 devtools::install(build_vignettes = TRUE)
 
 # Run the Shiny demo app
+shiny::runApp('inst/login_demo_simple/', port = 2112)
 shiny::runApp('inst/login_template/', port = 2112)
 
 # Run R CMD CHECK
