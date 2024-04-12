@@ -110,7 +110,7 @@ On the UI side only the `login_ui()` function is required. This will create a lo
 login::login_ui(id = APP_ID)
 ```
 
-![Screenshot for logging in](man/figures/screenshot_login.png)
+![Screenshot for logging in](screenshot_login.png)
 
 To add a log out button use the `logout_button()` function. This will only display if you are logged in. You can customize the button using the `label`, `icon`, and `style` parameters which are passed to the `shiny::actionButton()` function.
 
@@ -122,15 +122,15 @@ Optionally, you can write your logout procedure by setting `USER$logged_in <- FA
 
 The `new_user_ui()` function will provide an interface for users to create a new account. If the `emailer` parameter is set for `login_server()` and `verify_email = TRUE` then users will need to verify their email address before the account is created. This is done by sending a code (six digits by default) to the email address that they need to enter. 
 
-![Screenshot for creating a new account](man/figures/screenshot_new_account.png)
+![Screenshot for creating a new account](screenshot_new_account.png)
 
 The `reset_password_ui()` function provides UI elements for users to reset their password. This requires that the `emailer` parameter has been set for the `login_server()` function. Users enter their email address and request a code. Once the code has been sent the UI will changed asking the user to enter the code emailed to them. If they enter the correct code they can then enter a new password.
 
-![Screenshot of step one for resetting a password](man/figures/screenshot_reset_password1.png)
+![Screenshot of step one for resetting a password](screenshot_reset_password1.png)
 
-![Screenshot of step two for resetting a password](man/figures/screenshot_reset_password2.png)
+![Screenshot of step two for resetting a password](screenshot_reset_password2.png)
 
-![Screenshot of step three for resetting a password](man/figures/screenshot_reset_password3.png)
+![Screenshot of step three for resetting a password](screenshot_reset_password3.png)
 
 ## Adapting your Shiny application to the user
 
