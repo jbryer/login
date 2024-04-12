@@ -8,6 +8,8 @@ devtools::install(build_vignettes = TRUE)
 shiny::runApp('inst/login_demo_simple/', port = 2112)
 shiny::runApp('inst/login_template/', port = 2112)
 
+devtools::spell_check()
+
 # Run R CMD CHECK
 devtools::check()
 

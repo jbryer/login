@@ -15,7 +15,7 @@ is_not_logged_in(id, ...)
 a [@shiny::conditionalPanel()]
 }
 \description{
-This function can be used on teh Shiny UI side. It will. check to see if the
+This function can be used on the Shiny UI side. It will. check to see if the
 user is not logged in, if so the other Shiny elements will be displayed.
 }
 \examples{

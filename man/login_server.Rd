@@ -50,7 +50,7 @@ of the email address. See [emayili_emailer()] for an example.}
 address before the account is crated. This is done by sending a six
 digit code to the email address.}
 
-\item{additional_fields}{a character vector fo additional fields the user is
+\item{additional_fields}{a character vector of additional fields the user is
 asked to fill in at the when creating a new account. The names of the
 vector correspond to the variable names and the values will be used
 as the input labels.}
@@ -101,7 +101,7 @@ ui <- fluidPage(
     titlePanel("Shiny Login Simple Demo"),
     p("You can login with 'test/test'."),
     login::login_ui(id = 'login_demo'),
-    login::logout_ui('login_demo'),
+    login::logout_button('login_demo'),
     hr(),
     div('Are you logged in? ', textOutput('is_logged_in')),
     div('Username: ', textOutput('username')),

@@ -17,7 +17,7 @@
 #' @param verify_email if true new accounts will need to verify their email
 #'        address before the account is crated. This is done by sending a six
 #'        digit code to the email address.
-#' @param additional_fields a character vector fo additional fields the user is
+#' @param additional_fields a character vector of additional fields the user is
 #'        asked to fill in at the when creating a new account. The names of the
 #'        vector correspond to the variable names and the values will be used
 #'        as the input labels.
@@ -47,6 +47,7 @@
 #' @importFrom stringr str_pad
 #' @importFrom shinybusy show_modal_spinner remove_modal_spinner
 #' @importFrom digest digest
+#' @importFrom shinyjs hide show
 #' @export
 #' @example inst/login_demo_simple/app.R
 login_server <- function(
