@@ -248,7 +248,7 @@ password</div>
 <code>USER$logged_in</code>, for example, if you are rendering UI
 components on the server use the following pattern:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">output</span><span class="op">$</span><span class="va">my_ui</span> <span class="op">&lt;-</span> <span class="fu">renderUI</span><span class="op">(</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">output</span><span class="op">$</span><span class="va">my_ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">renderUI</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="kw">if</span><span class="op">(</span><span class="va">USER</span><span class="op">$</span><span class="va">logged_in</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># UI elements visible to users who are logged in.</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
@@ -262,12 +262,12 @@ respectively.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="../reference/is_logged_in.html">is_logged_in</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="va">APP_ID</span>,</span>
-<span>  <span class="fu">div</span><span class="op">(</span><span class="st">"This only shows when you are logged in!"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span><span class="st">"This only shows when you are logged in!"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">login</span><span class="fu">::</span><span class="fu"><a href="../reference/is_not_logged_in.html">is_not_logged_in</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="va">APP_ID</span>,</span>
-<span>  <span class="fu">div</span><span class="op">(</span><span class="st">"This only shows when you are NOT logged in!"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span><span class="st">"This only shows when you are NOT logged in!"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
