@@ -42,6 +42,6 @@ remotes::install_github('login')
 Once installed, there are two demos included:
 
 ``` r
-shiny::runApp('inst/login_demo_simple/', port = 2112)
-shiny::runApp('inst/login_template/', port = 2112)
+shiny::runApp(paste0(find.package('login'), '/login_demo_simple/'), port = 2112)
+shiny::runApp(paste0(find.package('login'), '/login_template/'), port = 2112)
 ```
