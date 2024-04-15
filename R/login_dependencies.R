@@ -1,7 +1,8 @@
 #' JavaScript and CSS dependencies.
 #'
 #' This ensures the JavaScript and CSS dependencies are available to the
-#' client. Files are located in `inst/assets/`.
+#' client. Files are located in `inst/assets/` (when viewing source code) or
+#' `assets/` when installed..
 #'
 #' @return a [htmltools::htmlDependency()] object defining the JavaScript and CSS files.
 #' @importFrom htmltools htmlDependencies
