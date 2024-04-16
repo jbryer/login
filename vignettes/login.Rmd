@@ -29,7 +29,7 @@ remotes::install_github('jbryer/login')
 
 ## Getting Started
 
-There is a template located at [`login_template/app.R`](login_template/app.R) that demonstrates the basic functionality. You can copy-and-paste this template for starting a new Shiny application with authentication. The following sections will describe the various functions required for the authentication to work.
+There is a template located at [`login_template/app.R`](https://github.com/jbryer/login/blob/main/inst/login_template/app.R) that demonstrates the basic functionality. You can copy-and-paste this template for starting a new Shiny application with authentication. The following sections will describe the various functions required for the authentication to work.
 
 ## Shiny Server
 

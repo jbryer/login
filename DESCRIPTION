@@ -2,7 +2,7 @@ Type: Package
 Package: login
 Title: Shiny Login Module
 Version: 0.9.1
-Date: 2024-04-11
+Date: 2024-04-15
 Authors@R: 
     person("Jason", "Bryer", , "jason@bryer.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2454-0402"))

@@ -11,5 +11,5 @@ a [htmltools::htmlDependency()] object defining the JavaScript and CSS files.
 }
 \description{
 This ensures the JavaScript and CSS dependencies are available to the
-client. Files are located in `inst/assets/`.
+client. Files are located in `assets/` folder when installed..
 }
