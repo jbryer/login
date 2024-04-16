@@ -72,7 +72,14 @@
 
 <!-- badges: end -->
 <p>This package provides a framework for adding user authentication to <a href="https://shiny.posit.co" class="external-link">Shiny</a> applications. This is unique to other authentication frameworks such as <a href="https://datastorm-open.github.io/shinymanager/" class="external-link">ShinyManager</a> and <a href="https://github.com/PaulC91/shinyauthr?tab=readme-ov-file" class="external-link">shinyauthr</a> in that it provides tools for users to create their own accounts and reset passwords. This is particularly useful for Shiny applications used to collect data without a pre-existing user management system. User credentials are stored in any database that supports the <a href="https://dbi.r-dbi.org" class="external-link">DBI</a> interface. Passwords are hashed using MD5 in the browser so that unencrypted passwords are never available to the Shiny server. For an extra layer of security, you can <a href="https://en.wikipedia.org/wiki/Salt_(cryptography)" class="external-link">salt</a> the password before storing it in the database.</p>
-<p>Please see the vignette <code><a href="articles/login.html">vignette('login', package = 'login')</a></code> or <a href="https://jbryer.github.io/login/articles/login.html">website</a> for more details on how to use this package with your Shiny application.</p>
+<p>Resources for learning to use the <code>login</code> pacakge:</p>
+<ul>
+<li>Package vignette <code><a href="articles/login.html">vignette('login', package = 'login')</a></code>
+</li>
+<li><a href="https://jbryer.github.io/" class="external-link">Package Website</a></li>
+<li>Slides from ShinyConf 2024 <a href="http://htmlpreview.github.io/?https://github.com/jbryer/login/tree/main/inst/slides/login.html" class="external-link">HTML</a> or <a href="https://github.com/jbryer/login/tree/main/inst/slies/login.pdf" class="external-link">PDF</a>
+</li>
+</ul>
 <p>You can install the latest development version using the <code>remotes</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'login'</span><span class="op">)</span></span></code></pre></div>
