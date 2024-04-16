@@ -19,6 +19,10 @@ vignette('login', package = 'login')
 # usethis::use_github_action("README.Rmd")
 devtools::release()
 
+# Build PDF of the slides
+renderthis::to_pdf('inst/slides/login.Rmd',
+				   complex_slides = TRUE,
+				   partial_slides = FALSE)
 
 ##### Hex Logo #################################################################
 library(hexSticker)

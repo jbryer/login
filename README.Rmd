@@ -33,8 +33,11 @@ library(login)
 
 This package provides a framework for adding user authentication to [Shiny](https://shiny.posit.co) applications. This is unique to other authentication frameworks such as [ShinyManager](https://datastorm-open.github.io/shinymanager/) and [shinyauthr](https://github.com/PaulC91/shinyauthr?tab=readme-ov-file) in that it provides tools for users to create their own accounts and reset passwords. This is particularly useful for Shiny applications used to collect data without a pre-existing user management system. User credentials are stored in any database that supports the [DBI](https://dbi.r-dbi.org) interface. Passwords are hashed using MD5 in the browser so that unencrypted passwords are never available to the Shiny server. For an extra layer of security, you can [salt](https://en.wikipedia.org/wiki/Salt_(cryptography)) the password before storing it in the database.
 
+Resources for learning to use the `login` pacakge:
 
-Please see the vignette `vignette('login', package = 'login')` or [website](https://jbryer.github.io/login/articles/login.html) for more details on how to use this package with your Shiny application.
+* Package vignette `vignette('login', package = 'login')`
+* [Package Website](https://jbryer.github.io/)
+* Slides from ShinyConf 2024 [HTML](http://htmlpreview.github.io/?https://github.com/jbryer/login/tree/main/inst/slides/login.html) or [PDF](https://github.com/jbryer/login/tree/main/inst/slies/login.pdf)
 
 You can install the latest development version using the `remotes` package:
 

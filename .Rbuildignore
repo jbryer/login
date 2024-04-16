@@ -14,3 +14,6 @@ inst/slides/
 ^CRAN-SUBMISSION$
 ^doc$
 ^Meta$
+inst/login_template/users.sqlite
+inst/login_template/config.R
+inst/login_demo_simple/users.sqlite
