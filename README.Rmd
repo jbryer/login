@@ -37,7 +37,7 @@ Resources for learning to use the `login` pacakge:
 
 * Package vignette `vignette('login', package = 'login')`
 * [Package Website](https://jbryer.github.io/)
-* Slides from ShinyConf 2024 [HTML](http://htmlpreview.github.io/?https://github.com/jbryer/login/tree/main/inst/slides/login.html) or [PDF](https://github.com/jbryer/login/tree/main/inst/slies/login.pdf)
+* Slides from ShinyConf 2024 [HTML](http://htmlpreview.github.io/?https://github.com/jbryer/login/blob/main/inst/slides/login.html) or [PDF](https://github.com/jbryer/login/tree/main/inst/slides/login.pdf)
 
 You can install the latest development version using the `remotes` package:
 

@@ -10,7 +10,7 @@ output:
   xaringan::moon_reader:
     css: ["assets/mtheme_max.css", "assets/fonts_mtheme_max.css"]
     lib_dir: libs
-    self_contained: false # if true, fonts will be stored locally
+    self_contained: true # if true, fonts will be stored locally
     seal: false # show a title slide with YAML information
     nature:
       highlightStyle: solarized-light
