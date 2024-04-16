@@ -23,6 +23,7 @@ devtools::release()
 rmarkdown::render('inst/slides/login.Rmd')
 renderthis::to_pdf('inst/slides/login.Rmd', complex_slides = TRUE, partial_slides = FALSE)
 
+
 ##### Hex Logo #################################################################
 library(hexSticker)
 library(showtext)

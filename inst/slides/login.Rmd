@@ -473,6 +473,12 @@ knitr::include_graphics('images/screenshot_msds_bridge.png')
 ```
 ]
 
+
+---
+class: inverse, center, middle, hide-logo
+
+# Questions
+
 ---
 class: inverse, right, middle, hide-logo
 
