@@ -83,7 +83,7 @@ Here are some of the security features implemented by the `login` package:
 	
 	* The Shiny server never sees the unencrypted password.
 
-* Salt - Salting is the processes of encrypting the password a second time before storing the password in the database. To enable set the `salt` parameter of `login_server()`. Additionally, you can specify the encryption algorithm to use (defaults to `sha512` but any algorithm supported by `digest::digest()` is valid).
+* Salt - Salting is the processes of encrypting the password a second time before storing the password in the database. To enable set the `salt` parameter of `login::login_server()`. Additionally, you can specify the encryption algorithm to use (defaults to `sha512` but any algorithm supported by `digest::digest()` is valid).
 	
 
 ---
@@ -122,8 +122,8 @@ APP_ID &lt;- 'my_login_app' # Change this
 
 .pull-left[
 ```r
-USER &lt;- login_server(
-  id = APP_ID,
+* USER &lt;- login::login_server(
+*  id = APP_ID,
   db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 
     'users.sqlite'),
   users_table = "users",
@@ -142,7 +142,7 @@ USER &lt;- login_server(
 ```
 ]
 .pull-right[
-The `login` package is implemented as a [Shiny module](https://shiny.posit.co/r/articles/improve/modules/). Within your server code you must call the `login_server()` function. The code on the left includes some of the basic features. The function will return a `reactiveValues` object with minimally the following elements:
+The `login` package is implemented as a [Shiny module](https://shiny.posit.co/r/articles/improve/modules/). Within your server function you must call `login::login_server()`. The code on the left includes some of the basic features. The function will return a `reactiveValues` object with the following elements:
 * `logged_in` - This is TRUE or FALSE.
 * `username` - The username if they have successfully logged in (i.e. their email address).
 ]
@@ -153,7 +153,7 @@ The `login` package is implemented as a [Shiny module](https://shiny.posit.co/r/
 
 .pull-left[
 ```r
-USER &lt;- login_server(
+USER &lt;- login::login_server(
   id = APP_ID,
 *  db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 
 *    'users.sqlite'),
@@ -184,7 +184,7 @@ The `users_table` parameter defines the table name in the database to store cred
 
 .pull-left[
 ```r
-USER &lt;- login_server(
+USER &lt;- login::login_server(
   id = APP_ID,
   db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 
     'users.sqlite'),
@@ -218,7 +218,7 @@ my_emailer &lt;- function(to_email, subject, message) {
 
 .pull-left[
 ```r
-USER &lt;- login_server(
+USER &lt;- login::login_server(
   id = APP_ID,
   db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 
     'users.sqlite'),
@@ -238,7 +238,7 @@ USER &lt;- login_server(
 ```
 ]
 .pull-right[
-At a minimum, the `login` package will capture the users' email address and (encrypted) password. If you wish to capture more information when the user creates an account, you can specify the desired fields with the `additional_fields` parameter. This is a character vector where the names are the database field names and the values are the labels users will see when creating an account.
+At a minimum, the `login` package will capture the users' email address and (encrypted) password. If you wish to capture more information when the user creates an account, you can specify the desired fields with the `additional_fields` parameter. This is a character vector where the names are the database field names and the values are the labels users will see when creating an account. Also, the values will be available in the returned `reactiveValues`, that is `USER$first_name` and `USER$last_name` will be set.
 ]
 
 
@@ -247,7 +247,7 @@ At a minimum, the `login` package will capture the users' email address and (enc
 
 .pull-left[
 ```r
-USER &lt;- login_server(
+USER &lt;- login::login_server(
   id = APP_ID,
   db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 
     'users.sqlite'),
@@ -278,7 +278,7 @@ Note that if you have cookies enabled, users can still opt-out by unchecking the
 
 .pull-left[
 ```r
-USER &lt;- login_server(
+USER &lt;- login::login_server(
   id = APP_ID,
   db_conn = RSQLite::dbConnect(RSQLite::SQLite(), 
     'users.sqlite'),
@@ -305,7 +305,7 @@ To enable salting, set the `salt` parameter. Additionally, you can use a differe
 ---
 # Using the login state in the Shiny server
 
-The `login_server()` returns a `reactiveValues` object. Therefore you can use the `USER$logged_in` within your Shiny server to change the behavior of the application based upon the users' login state. Since this is reactive, if the user logs out, the code will be re-executed.
+The `login::login_server()` returns a `reactiveValues` object. Therefore you can use the `USER$logged_in` within your Shiny server to change the behavior of the application based upon the users' login state. Since this is reactive, if the user logs out, the code will be re-executed.
 
 ```r
 if(USER$logged_in) {
@@ -343,9 +343,9 @@ logout_button(
 # Shiny UI: Creating an account
 
 .pull-left[
-The `new_user_ui()` function will provide the fields necessary to create a new account. Note that there are additional text fields for the `additional_fields` parameter specified in the `login_server()` function earlier.
+The `new_user_ui()` function will provide the fields necessary to create a new account. Note that there are additional text fields for the `additional_fields` parameter specified in the `login::login_server()` function earlier.
 
-If the `verify_email = TRUE` in the `login_server()` then the user will be required to verify their email address before their account is created (and saved to the database). The interface is the same as steps 2 and 3 of the password reset process described on the next slide.
+If the `verify_email = TRUE` in the `login::login_server()` then the user will be required to verify their email address before their account is created (and saved to the database). The interface is the same as steps 2 and 3 of the password reset process described on the next slide.
 ]
 .pull-right[
 ```r
@@ -360,14 +360,14 @@ login::new_user_ui(id = APP_ID)
 .pull-left[
 The `reset_password_ui()` function provides an interface to reset passwords. It will display differently depending on what step the user is on.
 
-Step 1: Enter email address. If the email address is in the database then they will proceed to step 2.
+**Step 1**: Enter email address. If the email address is in the database then they will proceed to step 2.
 &lt;img src="images/screenshot_reset_password1.png" width="1709" style="display: block; margin: auto;" /&gt;
 ]
 .pull-right[
-Step 2: Enter the code sent to the email address (the default is a random six digit code).
+**Step 2**: Enter the code sent to the email address (the default is a random six digit code).
 &lt;img src="images/screenshot_reset_password2.png" width="1709" style="display: block; margin: auto;" /&gt;
 
-Step 3: Enter a new password if the code in step 2 is entered correctly.
+**Step 3**: Enter a new password if the code in step 2 is entered correctly.
 &lt;img src="images/screenshot_reset_password3.png" width="1709" style="display: block; margin: auto;" /&gt;
 
 ]
@@ -401,33 +401,33 @@ This is the template included in the package:
 
 
 ```r
-shiny::runApp(paste0(find.package('login'), '/login_template/'), port = 2112)
+shiny::runApp(paste0(find.package('login'), 
+			  '/login_template/'), port = 2112)
 ```
 &lt;img src="images/screenshot_demo.png" width="90%" style="display: block; margin: auto;" /&gt;
 ]
 .pull-right[
-This example is for [CUNY School of Professional Studies](https://sps.cuny.edu/) bridge tutorials for the [Master in Data Science](http://catalog.sps.cuny.edu/preview_program.php?catoid=2&amp;poid=607) degree program.
+This example is from [CUNY School of Professional Studies](https://sps.cuny.edu/) bridge tutorials for the [Master in Data Science](http://catalog.sps.cuny.edu/preview_program.php?catoid=2&amp;poid=607) degree program.
 
 &lt;img src="images/screenshot_msds_bridge.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
 ---
-class: inverse, center, middle, hide-logo
+class: inverse, center, middle
 
-# Questions
+# Questions?
 
 ---
-class: inverse, right, middle, hide-logo
+class: inverse, left, middle
 
-# Thank You!
+&lt;img src="login_files/figure-html/login_qrcode-1.png" width="30%" height="30%" style="float:right; padding:10px";  style="display: block; margin: auto;" /&gt;
 
-[&lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M440 6.5L24 246.4c-34.4 19.9-31.1 70.8 5.7 85.9L144 379.6V464c0 46.4 59.2 65.5 86.6 28.6l43.8-59.1 111.9 46.2c5.9 2.4 12.1 3.6 18.3 3.6 8.2 0 16.3-2.1 23.6-6.2 12.8-7.2 21.6-20 23.9-34.5l59.4-387.2c6.1-40.1-36.9-68.8-71.5-48.9zM192 464v-64.6l36.6 15.1L192 464zm212.6-28.7l-153.8-63.5L391 169.5c10.7-15.5-9.5-33.5-23.7-21.2L155.8 332.6 48 288 464 48l-59.4 387.3z"&gt;&lt;/path&gt;&lt;/svg&gt; jason.bryer@cuny.edu](mailto:jason.bryer@cuny.edu)  
-[&lt;svg viewBox="0 0 496 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;&lt;/svg&gt; @jbryer](https://github.com/jbryer)  
-[&lt;svg viewBox="0 0 448 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"&gt;&lt;/path&gt;&lt;/svg&gt; @jbryer@vis.social](https://vis.social/@jbryer)  
-[&lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"&gt;&lt;/path&gt;&lt;/svg&gt; github.com/jbryer/login](https://jbryer.github.io/login/)   
-
-
+.font300[Thank You!]  
+[&lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;fill:white;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z"&gt;&lt;/path&gt;&lt;/svg&gt; jason.bryer@cuny.edu](mailto:jason.bryer@cuny.edu)  
+[&lt;svg viewBox="0 0 496 512" style="height:1em;position:relative;display:inline-block;top:.1em;fill:white;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;&lt;/svg&gt; @jbryer](https://github.com/jbryer)  
+[&lt;svg viewBox="0 0 448 512" style="height:1em;position:relative;display:inline-block;top:.1em;fill:white;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"&gt;&lt;/path&gt;&lt;/svg&gt; @jbryer@vis.social](https://vis.social/@jbryer)  
+[&lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;fill:white;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"&gt;&lt;/path&gt;&lt;/svg&gt; github.com/jbryer/login](https://jbryer.github.io/login/)   
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

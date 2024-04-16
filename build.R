@@ -15,8 +15,6 @@ devtools::check()
 
 vignette('login', package = 'login')
 
-# usethis::use_pkgdown_github_pages()
-# usethis::use_github_action("README.Rmd")
 devtools::release()
 
 # Build the slides

@@ -29,6 +29,7 @@ ui <- fluidPage(
     hr(),
     div('Are you logged in? ', textOutput('is_logged_in')),
     div('Username: ', textOutput('username')),
+    div('Name: ', textOutput('name')),
     is_logged_in(
         id = APP_ID,
         div("This only shows when you are logged in!")
@@ -70,6 +71,10 @@ server <- function(input, output, session) {
 
     output$username <- renderText({
         USER$username
+    })
+
+    output$name <- renderText({
+        paste0(USER$first_name, ' ', USER$last_name)
     })
 }
 

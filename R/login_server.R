@@ -81,6 +81,11 @@ login_server <- function(
 		reset_email_message <- 'Your password reset code is: %s\n
 		     If you did not request to reset your password you can ignore this email.'
 	}
+	if(!is.null(additional_fields)) {
+		if(is.null(names(additional_fields))) {
+			names(additional_fields) <- additional_fields
+		}
+	}
 
 	moduleServer(id, function(input, output, session) {
 		# Check to see if the users_table is already in the database, if not
@@ -130,10 +135,11 @@ login_server <- function(
 		}
 
 		get_user <- function(username) {
-			DBI::dbSendQuery(
+			user <- DBI::dbSendQuery(
 				db_conn,
-				paste0(",SELECT * FROM ", users_table, " WHERE username='", username, "'")
+				paste0("SELECT * FROM ", users_table, " WHERE username='", username, "'")
 			) |> DBI::dbFetch()
+			return(user)
 		}
 
 		add_user <- function(newuser) {
@@ -146,9 +152,13 @@ login_server <- function(
 				stringr::str_pad(width = 6, pad = '0')
 		}
 
-		USER <- reactiveValues(logged_in = FALSE,
-							   unique = format(Sys.time(), '%Y%m%d%H%M%S'),
-							   username = NA)
+		USER <- reactiveValues()
+		USER$logged_in <- FALSE
+		USER$unique <- format(Sys.time(), '%Y%m%d%H%M%S')
+		USER$username <- NA
+		for(i in additional_fields) {
+			USER[[i]] <- NA
+		}
 
 		output$logged_in <- renderText({
 			USER$logged_in
@@ -157,9 +167,16 @@ login_server <- function(
 		observeEvent(cookies::get_cookie(cookie_name = cookie_name, session = session), {
 			username <- cookies::get_cookie(cookie_name = cookie_name, session = session)
 			if(!is.null(username)) {
-				USER$username <- username
-				USER$logged_in <- TRUE
-				add_activitiy(username, 'login_cookie')
+				user <- get_user(username)
+				if(nrow(user) > 0) {
+					# Check the database to see if the user is still there
+					USER$username <- username
+					USER$logged_in <- TRUE
+					for(i in names(additional_fields)) {
+						USER[[i]] <- user[1,i]
+					}
+					add_activitiy(username, 'login_cookie')
+				}
 			}
 		}, once = TRUE)
 
@@ -212,6 +229,9 @@ login_server <- function(
 				login_message('')
 				USER$logged_in <- TRUE
 				USER$username <- username
+				for(i in names(additional_fields)) {
+					USER[[i]] <- users[Id.username, i]
+				}
 				add_activitiy(username, 'login')
 			}
 		})
@@ -222,6 +242,9 @@ login_server <- function(
 			USER$logged_in <- FALSE
 			USER$username <- ''
 			USER$unique <- format(Sys.time(), '%Y%m%d%H%M%S')
+			for(i in names(additional_fields)) {
+				USER[[i]] <- NA
+			}
 			cookies::remove_cookie(cookie_name = cookie_name, session = session)
 		})
 
