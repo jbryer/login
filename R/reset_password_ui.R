@@ -11,7 +11,7 @@ reset_password_ui <- function(id) {
 	# 	id = id,
 		htmltools::attachDependencies(
 			x = uiOutput(NS(id, 'reset_password_ui')),
-			value = login_dependencies(),
+			value = use_login(),
 			append = TRUE
 		)
 	# )

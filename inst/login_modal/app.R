@@ -19,14 +19,15 @@ ui <- fluidPage(
     div('Are you logged in? ', textOutput('is_logged_in')),
     div('Username: ', textOutput('username')),
     div('Name: ', textOutput('name')),
-    is_logged_in(
-        id = APP_ID,
-        div("This only shows when you are logged in!")
-    ),
-    is_not_logged_in(
-        id = APP_ID,
-        div("This only shows when you are NOT logged in!")
-    )
+    use_login()
+    # is_logged_in(
+    #     id = APP_ID,
+    #     div("This only shows when you are logged in!")
+    # ),
+    # is_not_logged_in(
+    #     id = APP_ID,
+    #     div("This only shows when you are NOT logged in!")
+    # )
 )
 
 ##### Server ###################################################################
@@ -43,8 +44,8 @@ server <- function(input, output, session) {
         ),
         additional_fields = c('first_name' = 'First Name',
                               'last_name' = 'Last Name'),
-        salt = 'login_demo',
-        cookie_name = NULL # TODO: Cookies currently don't work with modal dialogs
+        cookie_name = NULL, # TODO: Cookies currently don't work with modal dialogs
+        salt = 'login_demo'
     )
 
     output$login_button <- renderUI({

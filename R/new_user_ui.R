@@ -9,7 +9,7 @@ new_user_ui <- function(id) {
 		id = id,
 		htmltools::attachDependencies(
 			x = uiOutput(NS(id, 'new_user_ui')),
-			value = login_dependencies(),
+			value = use_login(),
 			append = TRUE
 		)
 	)

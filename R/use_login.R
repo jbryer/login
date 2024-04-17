@@ -7,7 +7,7 @@
 #' @importFrom htmltools htmlDependencies
 #' @importFrom utils packageVersion
 #' @export
-login_dependencies <- function() {
+use_login <- function() {
 	htmltools::htmlDependency(
 		name = 'login-assets',
 		version = utils::packageVersion('login'),

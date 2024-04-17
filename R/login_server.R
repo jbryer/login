@@ -175,7 +175,6 @@ login_server <- function(
 			if(!is.null(username)) {
 				user <- get_user(username)
 				if(nrow(user) > 0) {
-					# Check the database to see if the user is still there
 					USER$username <- username
 					USER$logged_in <- TRUE
 					for(i in names(additional_fields)) {
@@ -256,7 +255,9 @@ login_server <- function(
 				USER[[i]] <- NA
 			}
 			if(!is.null(cookie_name)) {
-				cookies::remove_cookie(cookie_name = cookie_name, session = session)
+				tryCatch({
+					cookies::remove_cookie(cookie_name = cookie_name, session = session)
+				}, error = function(e) { print(e) })
 			}
 		})
 
