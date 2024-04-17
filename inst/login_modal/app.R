@@ -1,6 +1,16 @@
 library(shiny)
-library(login)
 library(shinyjs)
+
+DEBUG <- FALSE
+
+if(DEBUG) {
+    path <- "/Users/jbryer/Dropbox (Personal)/Projects/login/R/"
+    for(i in list.files(path = path, pattern = '*.R')) {
+        source(paste0(path, i))
+    }
+} else {
+    library(login)
+}
 
 if(file.exists('config.R')) {
     source('config.R')
@@ -13,26 +23,18 @@ APP_ID <- 'login_modal'
 ###### User Interface ##########################################################
 ui <- fluidPage(
     useShinyjs(),
+    use_login(),
     titlePanel("Shiny Login Modal Example"),
     uiOutput('login_button'),
     hr(),
     div('Are you logged in? ', textOutput('is_logged_in')),
     div('Username: ', textOutput('username')),
-    div('Name: ', textOutput('name')),
-    use_login()
-    # is_logged_in(
-    #     id = APP_ID,
-    #     div("This only shows when you are logged in!")
-    # ),
-    # is_not_logged_in(
-    #     id = APP_ID,
-    #     div("This only shows when you are NOT logged in!")
-    # )
+    div('Name: ', textOutput('name'))
 )
 
 ##### Server ###################################################################
 server <- function(input, output, session) {
-    USER <- login::login_server(
+    USER <- login_server(
         id = APP_ID,
         db_conn = DBI::dbConnect(RSQLite::SQLite(), 'users.sqlite'),
         emailer = emayili_emailer(
@@ -50,7 +52,7 @@ server <- function(input, output, session) {
 
     output$login_button <- renderUI({
         if(USER$logged_in) {
-            login::logout_button(APP_ID, style = "position: absolute; right: 20px; top: 10px")
+            logout_button(APP_ID, style = "position: absolute; right: 20px; top: 10px")
         } else {
             shiny::actionButton(inputId = 'login_button',
                                 label = 'Login',
@@ -66,11 +68,11 @@ server <- function(input, output, session) {
                 tabsetPanel(
                     id = 'login_panel',
                     tabPanel('Login',
-                             login::login_ui(id = APP_ID) ),
+                             login_ui(id = APP_ID) ),
                     tabPanel('Create Account',
-                             login::new_user_ui(id = APP_ID) ),
+                             new_user_ui(id = APP_ID) ),
                     tabPanel('Reset Password',
-                             login::reset_password_ui(id = APP_ID))
+                             reset_password_ui(id = APP_ID))
                 )
             )
         ))

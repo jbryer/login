@@ -136,7 +136,6 @@ login_server <- function(
 		}
 
 		get_users <- function() {
-			# TODO: allow for non SQL user management
 			DBI::dbReadTable(db_conn, users_table)
 		}
 
@@ -155,7 +154,7 @@ login_server <- function(
 		generate_code <- function() {
 			sample(10 ^ code_length - 1, size = 1) |>
 				as.character() |>
-				stringr::str_pad(width = 6, pad = '0')
+				stringr::str_pad(width = code_length, pad = '0')
 		}
 
 		USER <- reactiveValues()
@@ -257,7 +256,9 @@ login_server <- function(
 			if(!is.null(cookie_name)) {
 				tryCatch({
 					cookies::remove_cookie(cookie_name = cookie_name, session = session)
-				}, error = function(e) { message(e) })
+				}, error = function(e) {
+					message(e)
+				})
 			}
 		})
 
