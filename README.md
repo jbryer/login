@@ -7,9 +7,9 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml)
-[![](https://img.shields.io/badge/devel%20version-0.9.1-blue.svg)](https://github.com/jbryer/login)
+[![](https://img.shields.io/badge/devel%20version-0.9.3-blue.svg)](https://github.com/jbryer/login)
 [![](https://www.r-pkg.org/badges/version/login)](https://cran.r-project.org/package=login)
-[![](https://img.shields.io/badge/doi-10.5281/zenodo.10633322-blue.svg)](https://doi.org/10.5281/zenodo.10633322)
+[![](https://img.shields.io/badge/doi-10.5281/zenodo.10987876-blue.svg)](https://doi.org/10.5281/zenodo.10987876)
 
 <!-- badges: end -->
 

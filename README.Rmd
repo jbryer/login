@@ -15,7 +15,7 @@ editor_options:
 [![R-CMD-check](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml)
 `r badger::badge_devel("jbryer/login", color = "blue")`
 `r badger::badge_cran_release("login")`
-`r badger::badge_doi('10.5281/zenodo.10633322', color = 'blue')`
+`r badger::badge_doi('10.5281/zenodo.10987876', color = 'blue')`
 
 <!-- badges: end -->
 

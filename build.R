@@ -3,6 +3,7 @@ usethis::use_tidy_description()
 devtools::document()
 devtools::build_vignettes()
 devtools::install(build_vignettes = TRUE)
+devtools::build()
 
 # Run the Shiny demo app (this only works when working from source)
 shiny::runApp('inst/login_demo_simple/', port = 2112)
