@@ -9,7 +9,7 @@
 #' @param email_port SMPT email port.
 #' @param email_username username for the SMTP server.
 #' @param email_password password for the SMTP server.
-#' @return returns a [emayili::server()] object.
+#' @return returns a function to send an email using the `emayili` package.
 #' @importFrom emayili envelope from to subject text server
 #' @export
 emayili_emailer <- function(

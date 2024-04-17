@@ -14,7 +14,7 @@ passwdInput(inputId, label, value)
 \item{value}{default value.}
 }
 \value{
-a [shiny::tagList()] object.
+a \code{\link[shiny:reexports]{shiny::tagList()}} object.
 }
 \description{
 This is an extension to Shiny's built in passwordInput by encrpting the

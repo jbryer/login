@@ -12,15 +12,12 @@ is_logged_in(id, ...)
 \item{...}{Shiny UI elements.}
 }
 \value{
-a [@shiny::conditionalPanel()]
+a \code{\link[shiny:conditionalPanel]{shiny::conditionalPanel()}} object.
 }
 \description{
 This function can be used on the Shiny UI side. It will check to see if the user
 is logged in, if so the other Shiny elements will be displayed.
 }
-\examples{
-\dontrun{
-login::is_logged_in(id = 'my_app_id',
-    div('Here is some HTML code that only shows when logged in.')))
-}
+\seealso{
+\code{\link[=login_server]{login_server()}}
 }

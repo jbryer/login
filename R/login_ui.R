@@ -4,6 +4,7 @@
 #' the user to login.
 #'
 #' @param id id unique ID for the Shiny Login module.
+#' @return a [shiny::div()] object.
 #' @export
 login_ui <- function(id) {
 	dependencies <- cookies::cookie_dependency()

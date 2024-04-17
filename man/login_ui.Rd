@@ -9,6 +9,9 @@ login_ui(id)
 \arguments{
 \item{id}{id unique ID for the Shiny Login module.}
 }
+\value{
+a \code{\link[shiny:reexports]{shiny::div()}} object.
+}
 \description{
 This will render (if the user is not logged in) text boxes and buttons for
 the user to login.

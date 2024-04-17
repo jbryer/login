@@ -5,13 +5,9 @@
 #'
 #' @param id id unique ID for the Shiny Login module.
 #' @param ... Shiny UI elements.
-#' @return a [@shiny::conditionalPanel()]
+#' @return a [shiny::conditionalPanel()] object.
 #' @export
-#' @examples
-#' \dontrun{
-#' login::is_logged_in(id = 'my_app_id',
-#'     div('Here is some HTML code that only shows when logged in.')))
-#' }
+#' @seealso [login_server()]
 is_logged_in <- function(id, ...) {
 	# # This is a hack to ensure that this is re-evaluated when the logged_in variable changes
 	div(textOutput(NS(id, 'logged_in')), style = 'visibility: hidden;')
@@ -28,13 +24,9 @@ is_logged_in <- function(id, ...) {
 #'
 #' @param id id unique ID for the Shiny Login module.
 #' @param ... Shiny UI elements.
-#' @return a [@shiny::conditionalPanel()]
+#' @return a [shiny::conditionalPanel()]
 #' @export
-#' @examples
-#' \dontrun{
-#' login::is_not_logged_in(id = 'my_app_id',
-#'     div('Here is some HTML code that only shows when NOT logged in.'))
-#' }
+#' @seealso [login_server()]
 is_not_logged_in <- function(id, ...) {
 	# # This is a hack to ensure that this is re-evaluated when the logged_in variable changes
 	div(textOutput(NS(id, 'logged_in')), style = 'visibility: hidden;')

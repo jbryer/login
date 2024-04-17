@@ -1,16 +1,17 @@
 Type: Package
 Package: login
 Title: Shiny Login Module
-Version: 0.9.2
-Date: 2024-04-16
+Version: 0.9.3
+Date: 2024-04-17
 Authors@R: 
     person("Jason", "Bryer", , "jason@bryer.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2454-0402"))
 Maintainer: Jason Bryer <jason@bryer.org>
-Description: Framework for adding authentication to Shiny applications.
+Description: Framework for adding authentication to 'shiny' applications.
     Provides flexibility as compared to other options for where user
     credentials are saved, allows users to create their own accounts, and
-    password reset functionality.
+    password reset functionality (Bryer, 2024)
+    <doi:10.5281/zenodo.10633322>.
 License: GPL (>= 3)
 URL: https://github.com/jbryer/login, https://jbryer.github.io/login/
 BugReports: https://github.com/jbryer/login/issues
@@ -34,4 +35,5 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1

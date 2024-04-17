@@ -7,6 +7,7 @@
 #' @param icon icon for the logout button.
 #' @param style CSS styles for the logout button.
 #' @param check_login if TRUE this will call [login::is_logged_in()].
+#' @return a [shiny::actionButton()] if the user is logged in.
 #' @export
 logout_button <- function(id,
 					  label = 'Logout',

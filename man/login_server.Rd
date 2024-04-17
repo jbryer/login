@@ -40,9 +40,9 @@ login_server(
 logout activity.}
 
 \item{emailer}{function used to send email messages. The function should have
-have three parameters: `to_email` for the address to send the email,
-`subject` for the subject of the email and `message` for the contents
-of the email address. See [emayili_emailer()] for an example.}
+have three parameters: \code{to_email} for the address to send the email,
+\code{subject} for the subject of the email and \code{message} for the contents
+of the email address. See \code{\link[=emayili_emailer]{emayili_emailer()}} for an example.}
 
 \item{new_account_subject}{the subject used for verifying new accounts.}
 
@@ -57,7 +57,7 @@ asked to fill in at the when creating a new account. The names of the
 vector correspond to the variable names and the values will be used
 as the input labels.}
 
-\item{cookie_name}{the name of the cookie saved. Set to `NULL` to disable cookies.}
+\item{cookie_name}{the name of the cookie saved. Set to \code{NULL} to disable cookies.}
 
 \item{cookie_expiration}{the number of days after which the cookie will expire.}
 
@@ -68,36 +68,36 @@ as the input labels.}
 \item{create_account_label}{label for the create account button.}
 
 \item{create_account_message}{Email message sent to confirm email when creating
-a new account. Include `\%s` somewhere in the message to include the code.}
+a new account. Include \verb{\\\%s} somewhere in the message to include the code.}
 
-\item{reset_email_message}{Email message sent to reset password. Include `\%s`
+\item{reset_email_message}{Email message sent to reset password. Include \verb{\\\%s}
 somewhere in the message to include the code.}
 
 \item{enclosing_panel}{the Shiny element that contains all the UI elements.
-The default is [shiny::wellPanel()]. If you wish a more subtle appearance
-[htmltools::div()] is a reasonable choice.}
+The default is \code{\link[shiny:wellPanel]{shiny::wellPanel()}}. If you wish a more subtle appearance
+\code{\link[htmltools:builder]{htmltools::div()}} is a reasonable choice.}
 
 \item{code_length}{the number of digits of codes emailed for creating accounts
-(if `verify_email == TRUE`) or resetting passwords.}
+(if \code{verify_email == TRUE}) or resetting passwords.}
 
 \item{salt}{a salt to use to encrypt the password before storing it in the database.}
 
 \item{salt_algo}{the algorithm used to encrypt the password. See
-[digest::digest()] for more details.}
+\code{\link[digest:digest]{digest::digest()}} for more details.}
 
 \item{shinybusy_spin}{Style of the spinner when sending emails.
-See [shinybusy::use_busy_spinner] for more information.}
+See \code{\link[shinybusy:manual-spinner]{shinybusy::use_busy_spinner()}} for more information.}
 
 \item{shinybusy_position}{Position of the spinner when sending emails.
-See [shinybusy::use_busy_spinner] for more information.}
+See \code{\link[shinybusy:manual-spinner]{shinybusy::use_busy_spinner()}} for more information.}
 }
 \value{
-a `shiny::reactiveValues`` object that includes two values: `logged_in`
-       (this is TRUE if the user is logged in) and `username` which has the
-       user's login username if logged in.
+a \code{\link[shiny:reactiveValues]{shiny::reactiveValues()}} object that includes two values: \code{logged_in}
+(this is TRUE if the user is logged in) and \code{username} which has the
+user's login username if logged in.
 }
 \description{
-This is the main server logic for the `login` Shiny module to be included
+This is the main server logic for the \code{login} Shiny module to be included
 in server.R side,.
 }
 \examples{

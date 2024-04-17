@@ -39,10 +39,10 @@
 #' @param salt_algo the algorithm used to encrypt the password. See
 #'        [digest::digest()] for more details.
 #' @param shinybusy_position Position of the spinner when sending emails.
-#'        See [shinybusy::use_busy_spinner] for more information.
+#'        See [shinybusy::use_busy_spinner()] for more information.
 #' @param shinybusy_spin Style of the spinner when sending emails.
-#'        See [shinybusy::use_busy_spinner] for more information.
-#' @return a `shiny::reactiveValues`` object that includes two values: `logged_in`
+#'        See [shinybusy::use_busy_spinner()] for more information.
+#' @return a [shiny::reactiveValues()] object that includes two values: `logged_in`
 #'        (this is TRUE if the user is logged in) and `username` which has the
 #'        user's login username if logged in.
 #' @import shiny
@@ -231,7 +231,7 @@ login_server <- function(
 												session = session,
 												expiration = cookie_expiration)
 						}, error = function(e) {
-							print(e)
+							message(e)
 						})
 					}
 				}
@@ -257,7 +257,7 @@ login_server <- function(
 			if(!is.null(cookie_name)) {
 				tryCatch({
 					cookies::remove_cookie(cookie_name = cookie_name, session = session)
-				}, error = function(e) { print(e) })
+				}, error = function(e) { message(e) })
 			}
 		})
 
@@ -349,7 +349,7 @@ login_server <- function(
 								message = sprintf(create_account_message, code))
 						new_user_code_verify(code)
 					}, error = function(e) {
-						print(e)
+						message(e)
 						reset_message(paste0('Error sending email: ', as.character(e)))
 					})
 					shinybusy::hide_spinner()
@@ -393,7 +393,7 @@ login_server <- function(
 				new_user_message('A new code has been sent.')
 				shinybusy::hide_spinner()
 			}, error = function(e) {
-				print(e)
+				message(e)
 				reset_message(paste0('Error sending email: ', as.character(e)))
 			})
 		})

@@ -7,9 +7,9 @@
 use_login()
 }
 \value{
-a [htmltools::htmlDependency()] object defining the JavaScript and CSS files.
+a \code{\link[htmltools:htmlDependency]{htmltools::htmlDependency()}} object defining the JavaScript and CSS files.
 }
 \description{
 This ensures the JavaScript and CSS dependencies are available to the
-client. Files are located in `assets/` folder when installed..
+client. Files are located in \verb{assets/} folder when installed..
 }

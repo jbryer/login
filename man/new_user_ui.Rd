@@ -9,6 +9,9 @@ new_user_ui(id)
 \arguments{
 \item{id}{id unique ID for the Shiny Login module.}
 }
+\value{
+\code{shiny} object containing the input fields for a user to create an account.
+}
 \description{
 This will render the UI for users to create an account.
 }

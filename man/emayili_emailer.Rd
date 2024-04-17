@@ -2,7 +2,7 @@
 % Please edit documentation in R/emayili_emailer.R
 \name{emayili_emailer}
 \alias{emayili_emailer}
-\title{Returns a function to send emails using the `emayili` package.}
+\title{Returns a function to send emails using the \code{emayili} package.}
 \usage{
 emayili_emailer(
   email_host = NULL,
@@ -21,15 +21,15 @@ emayili_emailer(
 
 \item{email_password}{password for the SMTP server.}
 
-\item{from_email}{the from email address sent from [login_server()].}
+\item{from_email}{the from email address sent from \code{\link[=login_server]{login_server()}}.}
 }
 \value{
-returns a [emayili::server()] object.
+returns a function to send an email using the \code{emayili} package.
 }
 \description{
-This returns a function that can be used with the [login_server()]. Specifically,
-the function takes two parameters, `to_email` and `message`.
+This returns a function that can be used with the \code{\link[=login_server]{login_server()}}. Specifically,
+the function takes two parameters, \code{to_email} and \code{message}.
 }
 \seealso{
-[login_server()]
+\code{\link[=login_server]{login_server()}}
 }

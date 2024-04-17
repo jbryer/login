@@ -21,7 +21,10 @@ logout_button(
 
 \item{style}{CSS styles for the logout button.}
 
-\item{check_login}{if TRUE this will call [login::is_logged_in()].}
+\item{check_login}{if TRUE this will call \code{\link[=is_logged_in]{is_logged_in()}}.}
+}
+\value{
+a \code{\link[shiny:actionButton]{shiny::actionButton()}} if the user is logged in.
 }
 \description{
 Render a button for the user to logout.

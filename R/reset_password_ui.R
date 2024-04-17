@@ -5,6 +5,7 @@
 #' [login::login_server()] function.
 #'
 #' @param id id unique ID for the Shiny Login module.
+#' @return a `shiny` object containing the input fields for a user to reset their password.
 #' @export
 reset_password_ui <- function(id) {
 	# is_not_logged_in(

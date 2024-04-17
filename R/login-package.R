@@ -1,7 +1,9 @@
-#' Shiny Login Module.
+#' login: User Authentication for Shiny Applications
 #'
-#' This package provides a Shiny module for adding user authentication to
-#' applications.
+#' Framework for adding authentication to 'shiny' applications.
+#' Provides flexibility as compared to other options for where user
+#' credentials are saved, allows users to create their own accounts, and
+#' password reset functionality.
 #'
 #' @import shiny
 #' @keywords internal

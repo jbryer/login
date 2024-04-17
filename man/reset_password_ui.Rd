@@ -9,8 +9,11 @@ reset_password_ui(id)
 \arguments{
 \item{id}{id unique ID for the Shiny Login module.}
 }
+\value{
+a \code{shiny} object containing the input fields for a user to reset their password.
+}
 \description{
 Displays UI for users to reset their password. In order for the password
 reset feature to work credentials to a SMTP server must be passed to the
-[login::login_server()] function.
+\code{\link[=login_server]{login_server()}} function.
 }
