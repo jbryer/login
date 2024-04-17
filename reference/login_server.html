@@ -77,7 +77,9 @@ in server.R side,.</p>
 <span>  enclosing_panel <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/shiny/man/wellPanel.html" class="external-link">wellPanel</a></span>,</span>
 <span>  code_length <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  salt <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  salt_algo <span class="op">=</span> <span class="st">"sha512"</span></span>
+<span>  salt_algo <span class="op">=</span> <span class="st">"sha512"</span>,</span>
+<span>  shinybusy_spin <span class="op">=</span> <span class="st">"fading-circle"</span>,</span>
+<span>  shinybusy_position <span class="op">=</span> <span class="st">"full-page"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -176,6 +178,16 @@ The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 <dt>salt_algo</dt>
 <dd><p>the algorithm used to encrypt the password. See
 [digest::digest()] for more details.</p></dd>
+
+
+<dt>shinybusy_spin</dt>
+<dd><p>Style of the spinner when sending emails.
+See [shinybusy::use_busy_spinner] for more information.</p></dd>
+
+
+<dt>shinybusy_position</dt>
+<dd><p>Position of the spinner when sending emails.
+See [shinybusy::use_busy_spinner] for more information.</p></dd>
 
 </dl></div>
     <div class="section level2">
