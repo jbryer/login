@@ -38,6 +38,10 @@
 #' @param salt a salt to use to encrypt the password before storing it in the database.
 #' @param salt_algo the algorithm used to encrypt the password. See
 #'        [digest::digest()] for more details.
+#' @param shinybusy_position Position of the spinner when sending emails.
+#'        See [shinybusy::use_busy_spinner] for more information.
+#' @param shinybusy_spin Style of the spinner when sending emails.
+#'        See [shinybusy::use_busy_spinner] for more information.
 #' @return a `shiny::reactiveValues`` object that includes two values: `logged_in`
 #'        (this is TRUE if the user is logged in) and `username` which has the
 #'        user's login username if logged in.
@@ -45,7 +49,7 @@
 #' @importFrom DBI dbListTables dbWriteTable dbReadTable dbSendQuery dbFetch
 #' @importFrom cookies get_cookie set_cookie
 #' @importFrom stringr str_pad
-#' @importFrom shinybusy show_modal_spinner remove_modal_spinner
+#' @importFrom shinybusy use_busy_spinner show_spinner hide_spinner
 #' @importFrom digest digest
 #' @importFrom shinyjs hide show
 #' @export
@@ -70,7 +74,9 @@ login_server <- function(
 		enclosing_panel = shiny::wellPanel,
 		code_length = 6,
 		salt = NULL,
-		salt_algo = "sha512"
+		salt_algo = "sha512",
+		shinybusy_spin = "fading-circle",
+		shinybusy_position = "full-page"
 ) {
 	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
 	if(is.null(create_account_message)) {
@@ -220,10 +226,14 @@ login_server <- function(
 			} else {
 				if(!is.null(input$remember_me)) {
 					if(input$remember_me) {
-						cookies::set_cookie(cookie_name = cookie_name,
-											cookie_value = username,
-											session = session,
-											expiration = cookie_expiration)
+						tryCatch({
+							cookies::set_cookie(cookie_name = cookie_name,
+												cookie_value = username,
+												session = session,
+												expiration = cookie_expiration)
+						}, error = function(e) {
+							print(e)
+						})
 					}
 				}
 				login_message('')
@@ -245,7 +255,9 @@ login_server <- function(
 			for(i in names(additional_fields)) {
 				USER[[i]] <- NA
 			}
-			cookies::remove_cookie(cookie_name = cookie_name, session = session)
+			if(!is.null(cookie_name)) {
+				cookies::remove_cookie(cookie_name = cookie_name, session = session)
+			}
 		})
 
 		##### Create new user ##################################################
@@ -259,7 +271,8 @@ login_server <- function(
 
 		output$new_user_ui <- renderUI({
 			args <- list(
-				div(textOutput(NS(id, 'new_user_message')), style = 'color:red;')
+				div(textOutput(NS(id, 'new_user_message')), style = 'color:red;'),
+				shinybusy::use_busy_spinner(spin = shinybusy_spin, position = shinybusy_position)
 			)
 			if(new_user_code_verify() == '') {
 				args[[length(args) + 1]] <- textInput(inputId = NS(id, 'new_username'),
@@ -326,8 +339,7 @@ login_server <- function(
 				}
 
 				if(verify_email) {
-					shinybusy::show_modal_spinner(spin = 'circle',
-												  text = 'Please wait...')
+					shinybusy::show_spinner()
 					new_user_values(newuser)
 					code <- generate_code()
 					tryCatch({
@@ -339,7 +351,7 @@ login_server <- function(
 						print(e)
 						reset_message(paste0('Error sending email: ', as.character(e)))
 					})
-					shinybusy::remove_modal_spinner()
+					shinybusy::hide_spinner()
 				} else {
 					add_user(newuser)
 					add_activitiy(newuser[1,]$username, 'create_account')
@@ -369,8 +381,7 @@ login_server <- function(
 
 		observeEvent(input$send_new_user_code, {
 			tryCatch({
-				shinybusy::show_modal_spinner(spin = 'circle',
-											  text = 'Please wait...')
+				shinybusy::show_spinner()
 				code <- generate_code()
 				newuser <- new_user_values()
 				email_address <- newuser[1,]$username
@@ -379,7 +390,7 @@ login_server <- function(
 						message = sprintf(create_account_message, code))
 				new_user_code_verify(code)
 				new_user_message('A new code has been sent.')
-				shinybusy::remove_modal_spinner()
+				shinybusy::hide_spinner()
 			}, error = function(e) {
 				print(e)
 				reset_message(paste0('Error sending email: ', as.character(e)))
@@ -407,6 +418,7 @@ login_server <- function(
 			}
 			if(reset_code() == '') {
 				enclosing_panel(
+					shinybusy::use_busy_spinner(spin = shinybusy_spin, position = shinybusy_position),
 					div(reset_message(), style = 'color:red'),
 					div(
 						textInput(inputId = NS(id, 'forgot_password_email'),
@@ -417,6 +429,7 @@ login_server <- function(
 				)
 			} else if(reset_password) {
 				enclosing_panel(
+					shinybusy::use_busy_spinner(spin = shinybusy_spin, position = shinybusy_position),
 					div(reset_message(), style = 'color:red'),
 					div(
 						passwdInput(inputId = NS(id, 'reset_password1'),
@@ -432,6 +445,7 @@ login_server <- function(
 				)
 			} else {
 				enclosing_panel(
+					shinybusy::use_busy_spinner(spin = shinybusy_spin, position = shinybusy_position),
 					div(reset_message(), style = 'color:red'),
 					div(
 						textInput(inputId = NS(id, 'reset_password_code'),
@@ -480,8 +494,7 @@ login_server <- function(
 				reset_message(paste0(email_address, ' not found.'))
 			} else {
 				code <- generate_code()
-				shinybusy::show_modal_spinner(spin = 'circle',
-											  text = 'Please wait...')
+				shinybusy::show_spinner()
 				tryCatch({
 					username <- PASSWORD[PASSWORD$username == email_address,]$username[1]
 					reset_username(username)
@@ -492,7 +505,7 @@ login_server <- function(
 				}, error = function(e) {
 					reset_message(paste0('Error sending email: ', as.character(e)))
 				})
-				shinybusy::remove_modal_spinner()
+				shinybusy::hide_spinner()
 			}
 		})
 

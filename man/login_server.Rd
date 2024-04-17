@@ -24,7 +24,9 @@ login_server(
   enclosing_panel = shiny::wellPanel,
   code_length = 6,
   salt = NULL,
-  salt_algo = "sha512"
+  salt_algo = "sha512",
+  shinybusy_spin = "fading-circle",
+  shinybusy_position = "full-page"
 )
 }
 \arguments{
@@ -82,6 +84,12 @@ The default is [shiny::wellPanel()]. If you wish a more subtle appearance
 
 \item{salt_algo}{the algorithm used to encrypt the password. See
 [digest::digest()] for more details.}
+
+\item{shinybusy_spin}{Style of the spinner when sending emails.
+See [shinybusy::use_busy_spinner] for more information.}
+
+\item{shinybusy_position}{Position of the spinner when sending emails.
+See [shinybusy::use_busy_spinner] for more information.}
 }
 \value{
 a `shiny::reactiveValues`` object that includes two values: `logged_in`
