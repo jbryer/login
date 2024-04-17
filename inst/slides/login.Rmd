@@ -155,12 +155,13 @@ There are two example Shiny applications included in the package:
 
 * https://github.com/jbryer/login/blob/main/inst/login_demo_simple/app.R
 * https://github.com/jbryer/login/blob/main/inst/login_template/app.R
+* https://github.com/jbryer/login/blob/main/inst/login_modal/app.R
 
 I usually put this at the top of my `app.R` or `global.R` file:
 
 ```{r, eval=FALSE}
 library(login)
-APP_ID <- 'my_login_app' # Change this
+APP_ID <- 'my_login_app'
 ```
 
 
