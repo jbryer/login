@@ -37,9 +37,6 @@
     <loc>https://jbryer.github.io/login/reference/login-package.html</loc>
   </url>
   <url>
-    <loc>https://jbryer.github.io/login/reference/login_dependencies.html</loc>
-  </url>
-  <url>
     <loc>https://jbryer.github.io/login/reference/login_server.html</loc>
   </url>
   <url>
@@ -56,5 +53,8 @@
   </url>
   <url>
     <loc>https://jbryer.github.io/login/reference/reset_password_ui.html</loc>
+  </url>
+  <url>
+    <loc>https://jbryer.github.io/login/reference/use_login.html</loc>
   </url>
 </urlset>
