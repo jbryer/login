@@ -502,4 +502,5 @@ qrcode::qr_code('https://jbryer.github.io/login') |> plot(col = c('#005DAC', 'wh
 [`r icons::fontawesome("envelope") |> icons::icon_style(fill = 'white')` jason.bryer@cuny.edu](mailto:jason.bryer@cuny.edu)  
 [`r icons::fontawesome("github") |> icons::icon_style(fill = 'white')` @jbryer](https://github.com/jbryer)  
 [`r icons::fontawesome('mastodon') |> icons::icon_style(fill = 'white')` @jbryer@vis.social](https://vis.social/@jbryer)  
-[`r icons::fontawesome("link") |> icons::icon_style(fill = 'white')` github.com/jbryer/login](https://jbryer.github.io/login/)   
+[`r icons::fontawesome("link") |> icons::icon_style(fill = 'white')` jbryer.github.io/login/](https://jbryer.github.io/login/)   
+[`r icons::fontawesome("linkedin") |> icons::icon_style(fill = 'white')` linkedin.com/in/jasonbryer/](https://www.linkedin.com/in/jasonbryer/)   
