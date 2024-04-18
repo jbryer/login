@@ -5,9 +5,13 @@
 @import url(https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css);
 @import url(https://fonts.googleapis.com/css?family=Noto+Serif);
 
-white{
+white {
   color: 'white';
   fill: 'white';
+}
+
+grey80 {
+  color: 'grey80';
 }
 
 body {

@@ -2,6 +2,7 @@
 title: "login: User Authentication for Shiny Applications"
 subtitle: "ShinyConf 2024"
 author: "Jason Bryer, Ph.D."
+position: "Assistant Professor and Associate Director"
 # date: "`r format(Sys.Date(), '%B %d, %Y')`"
 date: "April 18, 2024"
 affiliation: "CUNY SPS Data Science and Information Systems"
@@ -76,6 +77,7 @@ knitr::include_graphics('images/hex/login.png')
 # `r metadata$title`
 ## `r metadata$subtitle`
 ### **`r metadata$author`**
+### `r metadata$position`
 ### `r metadata$affiliation`
 ### `r metadata$date`
 

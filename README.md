@@ -42,9 +42,10 @@ package:
 remotes::install_github('login')
 ```
 
-Once installed, there are two demos included:
+Once installed, there are three demos included:
 
 ``` r
 shiny::runApp(paste0(find.package('login'), '/login_demo_simple/'), port = 2112)
 shiny::runApp(paste0(find.package('login'), '/login_template/'), port = 2112)
+shiny::runApp(paste0(find.package('login'), '/login_modal/'), port = 2112)
 ```
