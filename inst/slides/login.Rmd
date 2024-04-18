@@ -1,6 +1,6 @@
 ---
 title: "login: User Authentication for Shiny Applications"
-subtitle: "ShinyConf"
+subtitle: "ShinyConf 2024"
 author: "Jason Bryer, Ph.D."
 # date: "`r format(Sys.Date(), '%B %d, %Y')`"
 date: "April 18, 2024"
@@ -353,7 +353,7 @@ To enable salting, set the `salt` parameter. Additionally, you can use a differe
 ]
 
 ---
-# There are more options...
+# There are even more options...
 
 * `activity_table` the name of the table in the database to log login and logout activity.
 * `reset_password_subject` the subject of password reset emails.
@@ -474,17 +474,34 @@ login::is_not_logged_in(
 
 
 ---
-# Demo
+# Demos
 
-This is the template included in the package:
+.pull-left[
+
+Simple template where the login UI is incorporated in your page.
 
 ```{r, eval=FALSE}
-shiny::runApp(paste0(find.package('login'), '/login_template/'), port = 2112)
+shiny::runApp(paste0(find.package('login'), 
+					 '/login_template/'), port = 2112)
 ```
-```{r, echo=FALSE, out.width = '40%'}
-knitr::include_graphics('images/screenshot_demo.png')
+```{r, echo=FALSE, out.width = '70%'}
+knitr::include_graphics('images/screenshot_demo_template.png')
 ```
 
+]
+.pull-right[
+
+Template where users login through a modal dialog.
+
+```{r, eval=FALSE}
+shiny::runApp(paste0(find.package('login'),
+					 '/login_modal/'), port = 2112)
+```
+```{r, echo=FALSE, out.width = '70%'}
+knitr::include_graphics('images/screenshot_demo_modal.png')
+```
+
+]
 
 ---
 class: inverse, center, middle
