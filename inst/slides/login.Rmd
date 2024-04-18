@@ -93,13 +93,22 @@ knitr::include_graphics('images/hex/login.png')
 
 
 ---
-# Motivation for creating another authentication package
+# Motivation for creating another this package
 
-Two projects I am working on require user authentication:
+.pull-left[
+[FutureMapping.org](https://futuremapping.org) is a project where young people in New York City can identify locations in their community that are assets, problems, or something else. 
 
-* [Master of Data Science](https://sps.cuny.edu/academics/graduate/master-science-data-science-ms) (MSDS) at [CUNY School of Professional Studies](https://sps.cuny.edu/) Bridge Tutorials - This is an assessment and feedback system for applications in our MSDS program. The goal is to bridge gaps in their mathematics and R programming skills before enrolling in coursework.
+```{r, echo=FALSE, out.width = '90%'}
+knitr::include_graphics('images/screenshot_futuremapping.png')
+```
+]
+.pull-right[
+[Master of Data Science](https://sps.cuny.edu/academics/graduate/master-science-data-science-ms) (MSDS) at [CUNY School of Professional Studies](https://sps.cuny.edu/) Bridge Tutorials
 
-* [FutureMapping.org](https://futuremapping.org) is a project where young people in New York City can identify locations in their community that are assets, problems, or something else. 
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics('images/screenshot_msds_bridge.png')
+```
+]
 
 Both these projects require user authentication, but the current authentication frameworks did not have all the features we needed...
 
@@ -145,7 +154,7 @@ You can install the package from Github using the `remotes` package (should be o
 remotes::install_github('jbryer/login')
 ```
 
-There are two example Shiny applications included in the package:
+There are three example Shiny applications included in the package:
 
 * https://github.com/jbryer/login/blob/main/inst/login_demo_simple/app.R
 * https://github.com/jbryer/login/blob/main/inst/login_template/app.R
@@ -179,7 +188,7 @@ APP_ID <- 'my_login_app'
 	                    'last_name' = 'Last Name'),
   cookie_name = "loginusername",
   cookie_expiration = 30,
-  salt = NULL
+  salt = 'mysupersecretsalt'
 )
 ```
 ]
@@ -210,7 +219,7 @@ USER <- login::login_server(
 	                    'last_name' = 'Last Name'),
   cookie_name = "loginusername",
   cookie_expiration = 30,
-  salt = NULL
+  salt = 'mysupersecretsalt'
 )
 ```
 ]
@@ -241,7 +250,7 @@ USER <- login::login_server(
 	                    'last_name' = 'Last Name'),
   cookie_name = "loginusername",
   cookie_expiration = 30,
-  salt = NULL
+  salt = 'mysupersecretsalt'
 )
 ```
 ]
@@ -275,7 +284,7 @@ USER <- login::login_server(
 *	                    'last_name' = 'Last Name'),
   cookie_name = "loginusername",
   cookie_expiration = 30,
-  salt = NULL
+  salt = 'mysupersecretsalt'
 )
 ```
 ]
@@ -304,7 +313,7 @@ USER <- login::login_server(
 	                    'last_name' = 'Last Name'),
 *  cookie_name = "loginusername",
 *  cookie_expiration = 30,
-  salt = NULL
+  salt = 'mysupersecretsalt'
 )
 ```
 ]
@@ -335,7 +344,7 @@ USER <- login::login_server(
 	                    'last_name' = 'Last Name'),
   cookie_name = "loginusername",
   cookie_expiration = 30,
-*  salt = NULL
+*  salt = 'mysupersecretsalt'
 )
 ```
 ]
@@ -343,9 +352,26 @@ USER <- login::login_server(
 To enable salting, set the `salt` parameter. Additionally, you can use a different algorithm (sha512 is the default) using the `salt_algo` parameter. This parameter is passed to the `digest::digest()` function.
 ]
 
+---
+# There are more options...
+
+* `activity_table` the name of the table in the database to log login and logout activity.
+* `reset_password_subject` the subject of password reset emails.
+* `new_account_subject` the subject used for verifying new accounts.
+* `verify_email` if true new accounts will need to verify their email address before the account is crated. This is done by sending a six digit code to the email address.
+* `username_label` label used for text inputs of username.
+* `password_label` label used for text inputs of password.
+* `create_account_label` label for the create account button.
+* `create_account_message` Email message sent to confirm email when creating a new account. Include `\%s` somewhere in the message to include the code.
+* `reset_email_message` Email message sent to reset password. Include `\%s` somewhere in the message to include the code.
+* `enclosing_panel` the Shiny element that contains all the UI elements. The default is `shiny::wellPanel()`. If you wish a more subtle appearance `htmltools::div()` is a reasonable choice.
+* `code_length` the number of digits of codes emailed for creating accounts (if `verify_email == TRUE`) or resetting passwords.
+* `shinybusy_position` Position of the spinner when sending emails. See [`shinybusy::use_busy_spinner()`](https://dreamrs.github.io/shinybusy/reference/manual-spinner.html) for more information.
+* `shinybusy_spin` Style of the spinner when sending emails. See [`shinybusy::use_busy_spinner()`](https://dreamrs.github.io/shinybusy/reference/manual-spinner.html) for more information.
+
 
 ---
-# Using the login state in the Shiny server
+# Using the authentication state in the Shiny server
 
 The `login::login_server()` returns a `reactiveValues` object. Therefore you can use the `USER$logged_in` within your Shiny server to change the behavior of the application based upon the users' login state. Since this is reactive, if the user logs out, the code will be re-executed.
 
@@ -448,26 +474,16 @@ login::is_not_logged_in(
 
 
 ---
-# Demos
+# Demo
 
-.pull-left[
 This is the template included in the package:
 
 ```{r, eval=FALSE}
-shiny::runApp(paste0(find.package('login'), 
-			  '/login_template/'), port = 2112)
+shiny::runApp(paste0(find.package('login'), '/login_template/'), port = 2112)
 ```
-```{r, echo=FALSE, out.width = '90%'}
+```{r, echo=FALSE, out.width = '40%'}
 knitr::include_graphics('images/screenshot_demo.png')
 ```
-]
-.pull-right[
-This example is from [CUNY School of Professional Studies](https://sps.cuny.edu/) bridge tutorials for the [Master in Data Science](http://catalog.sps.cuny.edu/preview_program.php?catoid=2&poid=607) degree program.
-
-```{r, echo=FALSE, out.width = '100%'}
-knitr::include_graphics('images/screenshot_msds_bridge.png')
-```
-]
 
 
 ---

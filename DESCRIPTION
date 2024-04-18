@@ -1,6 +1,6 @@
 Type: Package
 Package: login
-Title: Shiny Login Module
+Title: 'shiny' Login Module
 Version: 0.9.3
 Date: 2024-04-17
 Authors@R: 
@@ -10,7 +10,7 @@ Maintainer: Jason Bryer <jason@bryer.org>
 Description: Framework for adding authentication to 'shiny' applications.
     Provides flexibility as compared to other options for where user
     credentials are saved, allows users to create their own accounts, and
-    password reset functionality (Bryer, 2024)
+    password reset functionality. Bryer (2024)
     <doi:10.5281/zenodo.10987876>.
 License: GPL (>= 3)
 URL: https://github.com/jbryer/login, https://jbryer.github.io/login/
