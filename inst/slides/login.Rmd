@@ -93,6 +93,7 @@ knitr::include_graphics('images/hex/login.png')
 
 * [Standard and Professional plans on shinyapps.io](https://docs.posit.co/shinyapps.io/authentication-and-user-management.html) - Similar to Posit Connect, this is a paid hosting service.
 
+* [Firebase](https://firebase.john-coene.com) - Integrates with [Google Firebase](https://firebase.google.com) services.
 
 ---
 # Motivation for creating another this package
@@ -150,7 +151,13 @@ Here are some of the security features implemented by the `login` package:
 ---
 # Getting started
 
-You can install the package from Github using the `remotes` package (should be on CRAN soon):
+You can install the package from CRAN:
+
+```{r, eval=FALSE}
+install.packages('login')
+```
+
+Or install the latest development version from Github using the `remotes` package:
 
 ```{r, eval=FALSE}
 remotes::install_github('jbryer/login')
