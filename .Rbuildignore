@@ -17,3 +17,4 @@ inst/login_template/users.sqlite
 inst/login_template/config.R
 inst/login_demo_simple/users.sqlite
 inst/slides/
+^CODE_OF_CONDUCT\.md$

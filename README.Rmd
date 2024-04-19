@@ -52,3 +52,7 @@ shiny::runApp(paste0(find.package('login'), '/login_demo_simple/'), port = 2112)
 shiny::runApp(paste0(find.package('login'), '/login_template/'), port = 2112)
 shiny::runApp(paste0(find.package('login'), '/login_modal/'), port = 2112)
 ```
+
+## Code of Conduct
+
+Please note that the login project is released with a [Contributor Code of Conduct](https://jbryer.github.io/login/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
