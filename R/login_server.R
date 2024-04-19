@@ -26,6 +26,7 @@
 #' @param create_account_label label for the create account button.
 #' @param cookie_name the name of the cookie saved. Set to `NULL` to disable cookies.
 #' @param cookie_expiration the number of days after which the cookie will expire.
+#' @param cookie_password password used to encrypt cookies saved in the browser.
 #' @param create_account_message Email message sent to confirm email when creating
 #'        a new account. Include `\%s` somewhere in the message to include the code.
 #' @param reset_email_message Email message sent to reset password. Include `\%s`
@@ -52,6 +53,7 @@
 #' @importFrom shinybusy use_busy_spinner show_spinner hide_spinner
 #' @importFrom digest digest
 #' @importFrom shinyjs hide show
+#' @importFrom sodium data_decrypt data_encrypt sha256 bin2hex hex2bin
 #' @export
 #' @example inst/login_demo_simple/app.R
 login_server <- function(
@@ -66,6 +68,7 @@ login_server <- function(
 		additional_fields = NULL,
 		cookie_name = 'loginusername',
 		cookie_expiration = 30,
+		cookie_password = NULL,
 		username_label = 'Email:',
 		password_label = 'Password:',
 		create_account_label = "Create Account",
@@ -90,6 +93,35 @@ login_server <- function(
 	if(!is.null(additional_fields)) {
 		if(is.null(names(additional_fields))) {
 			names(additional_fields) <- additional_fields
+		}
+	}
+
+	cookie_key <- NULL
+	# TODO: This is a workaround to the decryption. I am not entirely sure if this
+	# compromises the encryption of the cookie value. See this issue:
+	# https://github.com/r-lib/sodium/issues/21
+	# Could make this a function parameter.
+	cookie_nonce <- rep(as.raw(42), 24)
+
+	encrypt_cookie <- function(message) {
+		message |>
+			charToRaw() |>
+			sodium::data_encrypt(key = cookie_key, nonce = cookie_nonce) |>
+			sodium::bin2hex()
+	}
+
+	decrypt_cookie <- function(message) {
+		message |>
+			sodium::hex2bin() |>
+			sodium::data_decrypt(key = cookie_key, nonce = cookie_nonce) |>
+			rawToChar()
+	}
+
+	if(!is.null(cookie_name)) {
+		if(is.null(cookie_password)) {
+			warning("cookie_password not specified. Not specifying a key file means cookies will be stored unencrypted in the user's browsers")
+		} else {
+			cookie_key <- sodium::sha256(charToRaw(cookie_password))
 		}
 	}
 
@@ -171,6 +203,14 @@ login_server <- function(
 
 		observeEvent(cookies::get_cookie(cookie_name = cookie_name, session = session), {
 			username <- cookies::get_cookie(cookie_name = cookie_name, session = session)
+			tryCatch({
+				if(!is.null(cookie_key)) {
+					username <- decrypt_cookie(username)
+				}
+			}, error = function(e) {
+				warning(paste0('Error retrieving cookie value.'))
+				cookies::remove_cookie(cookie_name = cookie_name)
+			})
 			if(!is.null(username)) {
 				user <- get_user(username)
 				if(nrow(user) > 0) {
@@ -224,9 +264,13 @@ login_server <- function(
 			} else {
 				if(!is.null(input$remember_me)) {
 					if(input$remember_me) {
+						cookie_value <- username
+						if(!is.null(cookie_key)) {
+							cookie_value <- encrypt_cookie(username)
+						}
 						tryCatch({
 							cookies::set_cookie(cookie_name = cookie_name,
-												cookie_value = username,
+												cookie_value = cookie_value,
 												session = session,
 												expiration = cookie_expiration)
 						}, error = function(e) {

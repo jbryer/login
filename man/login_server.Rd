@@ -16,6 +16,7 @@ login_server(
   additional_fields = NULL,
   cookie_name = "loginusername",
   cookie_expiration = 30,
+  cookie_password = NULL,
   username_label = "Email:",
   password_label = "Password:",
   create_account_label = "Create Account",
@@ -60,6 +61,8 @@ as the input labels.}
 \item{cookie_name}{the name of the cookie saved. Set to \code{NULL} to disable cookies.}
 
 \item{cookie_expiration}{the number of days after which the cookie will expire.}
+
+\item{cookie_password}{password used to encrypt cookies saved in the browser.}
 
 \item{username_label}{label used for text inputs of username.}
 

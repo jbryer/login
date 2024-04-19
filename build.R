@@ -24,6 +24,17 @@ rmarkdown::render('inst/slides/login.Rmd')
 renderthis::to_pdf('inst/slides/login.Rmd', complex_slides = TRUE, partial_slides = FALSE)
 
 
+# Test the encryption of cookies
+passkey <- sodium::sha256(charToRaw('my_secret_password'))
+message <- 'sodium is cool!'
+nonce <- rep(as.raw(42), 24)
+message_encrypted <- message |> charToRaw() |> sodium::data_encrypt(key = passkey,  nonce = nonce)
+attributes(message_encrypted)
+message_to_send <- message_encrypted |> sodium::bin2hex()
+message_received <- message_to_send |> sodium::hex2bin()
+sodium::data_decrypt(message_received, key = passkey, nonce = nonce) |> rawToChar()
+
+
 ##### Hex Logo #################################################################
 library(hexSticker)
 library(showtext)

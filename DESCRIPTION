@@ -1,8 +1,8 @@
 Type: Package
 Package: login
 Title: 'shiny' Login Module
-Version: 0.9.3
-Date: 2024-04-17
+Version: 0.9.4
+Date: 2024-04-19
 Authors@R: 
     person("Jason", "Bryer", , "jason@bryer.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2454-0402"))
@@ -24,6 +24,7 @@ Imports:
     shiny,
     shinybusy,
     shinyjs,
+    sodium,
     stringr,
     utils
 Suggests: 

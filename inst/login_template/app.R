@@ -54,6 +54,7 @@ server <- function(input, output, session) {
         ),
         additional_fields = c('first_name' = 'First Name',
                               'last_name' = 'Last Name'),
+        cookie_password = 'mysupersecretcookiekey', # You should definitely change this!
         salt = 'login_demo'
     )
 
