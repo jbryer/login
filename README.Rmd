@@ -36,7 +36,7 @@ This package provides a framework for adding user authentication to [Shiny](http
 Resources for learning to use the `login` pacakge:
 
 * Package vignette `vignette('login', package = 'login')`
-* [Package Website](https://jbryer.github.io/)
+* [Package Website](https://jbryer.github.io/login/)
 * [Slides from ShinyConf 2024](https://github.com/jbryer/login/tree/main/inst/slides/login.pdf)
 
 You can install the latest development version using the `remotes` package:

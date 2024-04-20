@@ -31,7 +31,7 @@ before storing it in the database.
 Resources for learning to use the `login` pacakge:
 
 - Package vignette `vignette('login', package = 'login')`
-- [Package Website](https://jbryer.github.io/)
+- [Package Website](https://jbryer.github.io/login/)
 - [Slides from ShinyConf
   2024](https://github.com/jbryer/login/tree/main/inst/slides/login.pdf)
 
