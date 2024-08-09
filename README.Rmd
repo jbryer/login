@@ -42,7 +42,7 @@ Resources for learning to use the `login` pacakge:
 You can install the latest development version using the `remotes` package:
 
 ```{r, eval=FALSE}
-remotes::install_github('login')
+remotes::install_github('jbryer/login')
 ```
 
 Once installed, there are three demos included:
