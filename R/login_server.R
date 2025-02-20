@@ -71,7 +71,7 @@ login_server <- function(
 		cookie_password = NULL,
 		username_label = 'Email:',
 		password_label = 'Password:',
-		create_account_label = "Create Account",
+		create_account_label = "Account erstellen",
 		create_account_message = NULL,
 		reset_email_message = NULL,
 		enclosing_panel = shiny::wellPanel,
