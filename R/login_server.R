@@ -340,11 +340,11 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 			} else {
 				args[[length(args) + 1]] <- div(
 					textInput(inputId = NS(id, 'new_user_code'),
-							  label = 'Enter the code from the email:',
+							  label = 'Geben Sie den Code aus der E-Mail ein:',
 							  value = '')
 				)
 				args[[length(args) + 1]] <- actionButton(inputId = NS(id, 'send_new_user_code'),
-							 label = 'Resend Code')
+							 label = 'Code erneut senden')
 				args[[length(args) + 1]] <- actionButton(inputId = NS(id, 'submit_new_user_code'),
 							 label = 'Submit')
 			}
@@ -360,12 +360,12 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 
 			id.username <- which(tolower(users$username) == tolower(username))
 			if(length(id.username) > 0) {
-				new_user_message(paste0('Account already exists for ', username))
+				new_user_message(paste0('Account exisitiert bereits für ', username))
 			} else if(password1 != password2) {
-				new_user_message('Passwords to not match.')
+				new_user_message('Passwörter stimmen nicht überein.')
 			} else if(input$new_password1 == 'd41d8cd98f00b204e9800998ecf8427e') {
 				# Check for a blank password
-				new_user_message('Please enter a valid password.')
+				new_user_message('Bitte geben Sie ein korrektes Passwort ein.')
 			} else {
 				newuser <- data.frame(
 					username = username,
@@ -401,8 +401,8 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 				} else {
 					add_user(newuser)
 					add_activitiy(newuser[1,]$username, 'create_account')
-					new_user_message(paste0('New account created for ', username,
-											'. You can now login.'))
+					new_user_message(paste0('Neuer Account wurde erstellt für: ', username,
+											'. Sie können sich nun einloggen.'))
 				}
 			}
 		})
@@ -411,15 +411,15 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 			if(input$submit_new_user_code == 1) {
 				code <- isolate(input$new_user_code)
 				if(nchar(code) != 6 & reset_code() == code) {
-					new_user_message('Code is not correct')
+					new_user_message('Code ist nicht korrekt')
 				} else {
 					newuser <- new_user_values()
 					add_user(newuser)
 					new_user_values(data.frame())
 					new_user_code_verify('')
-					new_user_message(paste0('New account created for ',
+					new_user_message(paste0('Neuer Account wurde erstellt für: ',
 											newuser[1,'username'],
-											'. You can now login.'))
+											'. Sie können sich nun einloggen.'))
 					add_activitiy(newuser[1,]$username, 'create_account')
 				}
 			}
@@ -435,7 +435,7 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 						subject = new_account_subject,
 						message = sprintf(create_account_message, code))
 				new_user_code_verify(code)
-				new_user_message('A new code has been sent.')
+				new_user_message('Ein neue Code wurde versendet')
 				shinybusy::hide_spinner()
 			}, error = function(e) {
 				message(e)
@@ -468,7 +468,7 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 					div(reset_message(), style = 'color:red'),
 					div(
 						textInput(inputId = NS(id, 'forgot_password_email'),
-								  label = 'Email address: ',
+								  label = 'Email Adress: ',
 								  value = '')),
 					actionButton(inputId = NS(id, 'send_reset_password_code'),
 								 label = 'Send reset code')
@@ -479,15 +479,15 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 					div(reset_message(), style = 'color:red'),
 					div(
 						passwdInput(inputId = NS(id, 'reset_password1'),
-									label = 'Enter new password:',
+									label = 'Neues Passwort:',
 									value = ''),
 						passwdInput(inputId = NS(id, 'reset_password2'),
-									label = 'Confirm new password:',
+									label = 'Neues Passwort bestätigen:',
 									value = '')
 					),
 					# br(),
 					actionButton(inputId = NS(id, 'reset_new_password'),
-								 label = 'Reset Password')
+								 label = 'Passwort zurücksetzen')
 				)
 			} else {
 				enclosing_panel(
@@ -495,14 +495,14 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 					div(reset_message(), style = 'color:red'),
 					div(
 						textInput(inputId = NS(id, 'reset_password_code'),
-								  label = 'Enter the code from the email:',
+								  label = 'Geben Sie den Code aus der E-Mail ein:',
 								  value = '')
 					),
 					# br(),
 					actionButton(inputId = NS(id, 'send_reset_password_code'),
-								 label = 'Resend Code'),
+								 label = 'Code erneut senden'),
 					actionButton(inputId = NS(id, 'submit_reset_password_code'),
-								 label = 'Submit')
+								 label = 'Absenden')
 				)
 			}
 		})
@@ -512,7 +512,7 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 				code <- isolate(input$reset_password_code)
 				reset_code_verify(code)
 				if(nchar(code) != 6 & reset_code() == code) {
-					reset_message('Code is not correct')
+					reset_message('Code ist nicht korrekt')
 				}
 			}
 		})
@@ -526,10 +526,10 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 				)
 				DBI::dbSendQuery(db_conn, query)
 				add_activitiy(reset_username(), 'password_reset')
-				reset_message('Password updated successfully. Please go to the login tab.')
+				reset_message('Passwort erfolgreich aktualisiert. Bitte gehen Sie zum Anmelde-Tab.')
 				reset_code('')
 			} else {
-				reset_message('Passwords do not match.')
+				reset_message('Passwörter stimmen nicht überein.')
 			}
 		})
 
