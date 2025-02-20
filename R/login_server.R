@@ -468,10 +468,10 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 					div(reset_message(), style = 'color:red'),
 					div(
 						textInput(inputId = NS(id, 'forgot_password_email'),
-								  label = 'Email Adress: ',
+								  label = 'E-Mail Adresse: ',
 								  value = '')),
 					actionButton(inputId = NS(id, 'send_reset_password_code'),
-								 label = 'Send reset code')
+								 label = 'Reset-Code senden')
 				)
 			} else if(reset_password) {
 				enclosing_panel(
