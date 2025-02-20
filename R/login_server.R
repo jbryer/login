@@ -70,7 +70,7 @@ login_server <- function(
 		cookie_expiration = 30,
 		cookie_password = NULL,
 		username_label = 'Email:',
-		password_label = 'Password:',
+		password_label = 'Passwort:',
 		create_account_label = "Account erstellen",
 		create_account_message = NULL,
 		reset_email_message = NULL,
