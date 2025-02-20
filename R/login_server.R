@@ -241,7 +241,7 @@ login_server <- function(
 			if(!is.null(cookie_name)) {
 				args[[length(args) + 1]] <- checkboxInput(
 					inputId = NS(id, 'remember_me'),
-					label = 'Remember me?',
+					label = 'Eingeloggt bleiben?',
 					value = TRUE)
 			}
 
