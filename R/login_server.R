@@ -83,12 +83,12 @@ login_server <- function(
 ) {
 	# Set defaults here since the parameter value is longer than 90 characters (fails CRAN CHECK)
 	if(is.null(create_account_message)) {
-		create_account_message <- 'Your confirmation code to create a new account is: %s\n
-		     If you did not request to create a new account you can ignore this email.'
+		create_account_message <- 'Ihr Bestätigungscode zur Erstellung eines neuen Kontos lautet: %s\n
+Wenn Sie nicht angefordert haben, ein neues Konto zu erstellen, können Sie diese E-Mail ignorieren.'
 	}
 	if(is.null(reset_email_message)) {
-		reset_email_message <- 'Your password reset code is: %s\n
-		     If you did not request to reset your password you can ignore this email.'
+		reset_email_message <- 'Ihr Code zum Zurücksetzen des Passworts lautet: %s\n
+Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie diese E-Mail ignorieren..'
 	}
 	if(!is.null(additional_fields)) {
 		if(is.null(names(additional_fields))) {
@@ -258,9 +258,9 @@ login_server <- function(
 			password <- get_password(input$password)
 			Id.username <- which(tolower(users$username) == tolower(username))
 			if(is.null(Id.username) | length(Id.username) != 1) {
-				login_message('Username not found.')
+				login_message('Username nicht gefunden.')
 			} else if(password != users[Id.username,]$password) {
-				login_message('Incorrect password.')
+				login_message('Inkorrektes Passwort')
 			} else {
 				if(!is.null(input$remember_me)) {
 					if(input$remember_me) {
