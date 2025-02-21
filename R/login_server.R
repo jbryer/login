@@ -167,10 +167,12 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 
 		add_activitiy <- function(username, activity) {
 			if(!is.null(activity_table)) {
-				new_activity <- data.frame(username = username,
-										   action = activity,
-										   timestamp = Sys.time(),
-										   stringsAsFactors = FALSE)
+				new_activity <- data.frame(
+					username = username,  # Hier kommt bereits die verschlüsselte Version
+					action = activity,
+					timestamp = Sys.time(),
+					stringsAsFactors = FALSE
+				)
 				DBI::dbWriteTable(db_conn, activity_table, new_activity, append = TRUE)
 			}
 		}
@@ -370,26 +372,23 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 
 		observeEvent(input$new_user, {
 			users <- get_users()
-			username <- input$new_username
-			encrypted_username <- get_encrypted_email(username, salt, salt_algo)
+			plain_username <- input$new_username
+			encrypted_username <- get_encrypted_email(plain_username, salt, salt_algo)
 			password1 <- get_password(input$new_password1)
 			password2 <- get_password(input$new_password2)
 
-			# Prüfe ob die verschlüsselte Email bereits existiert
 			id.username <- which(users$username == encrypted_username)
-
 			if(length(id.username) > 0) {
-				new_user_message(paste0('Account exisitiert bereits für ', username))
+				new_user_message(paste0('Account exisitiert bereits für ', plain_username))
 			} else if(password1 != password2) {
 				new_user_message('Passwörter stimmen nicht überein.')
 			} else if(input$new_password1 == 'd41d8cd98f00b204e9800998ecf8427e') {
 				new_user_message('Bitte geben Sie ein korrektes Passwort ein.')
 			} else {
 				newuser <- data.frame(
-					username = encrypted_username,  # Speichere verschlüsselte Email
+					username = encrypted_username,
 					password = password1,
 					created_date = Sys.time(),
-					email_plain = username,  # Optional: Speichere auch unverschlüsselte Email
 					stringsAsFactors = FALSE
 				)
 
@@ -399,16 +398,12 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 					}
 				}
 
-				for(i in names(users)[(!names(users) %in% names(newuser))]) {
-					newuser[,i] <- NA # Make sure the data.frames line up
-				}
-
 				if(verify_email) {
 					shinybusy::show_spinner()
 					new_user_values(newuser)
 					code <- generate_code()
 					tryCatch({
-						emailer(to_email = username,
+						emailer(to_email = plain_username,  # Hier unverschlüsselte Email für den Versand
 								subject = new_account_subject,
 								message = sprintf(create_account_message, code))
 						new_user_code_verify(code)
@@ -419,8 +414,8 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 					shinybusy::hide_spinner()
 				} else {
 					add_user(newuser)
-					add_activitiy(newuser[1,]$username, 'create_account')
-					new_user_message(paste0('Neuer Account wurde erstellt für: ', username,
+					add_activitiy(encrypted_username, 'create_account')
+					new_user_message(paste0('Neuer Account wurde erstellt für: ', plain_username,
 											'. Sie können sich nun einloggen.'))
 				}
 			}
@@ -554,18 +549,20 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 
 		observeEvent(input$send_reset_password_code, {
 			PASSWORD <- DBI::dbReadTable(db_conn, users_table)
-			email_address <- isolate(input$forgot_password_email) |> tolower()
-			if(!email_address %in% PASSWORD$username) {
+			email_address <- isolate(input$forgot_password_email)
+			encrypted_email <- get_encrypted_email(email_address, salt, salt_algo)
+
+			if(!encrypted_email %in% PASSWORD$username) {
 				reset_message(paste0(email_address, ' not found.'))
 			} else {
 				code <- generate_code()
 				shinybusy::show_spinner()
 				tryCatch({
-					username <- PASSWORD[PASSWORD$username == email_address,]$username[1]
-					reset_username(username)
+					# Hier brauchen wir die unverschlüsselte Email für den Versand
 					emailer(to_email = email_address,
 							subject = reset_password_subject,
 							message = sprintf(reset_email_message, code))
+					reset_username(encrypted_email)  # Hier speichern wir die verschlüsselte Version
 					reset_code(code)
 				}, error = function(e) {
 					reset_message(paste0('Error sending email: ', as.character(e)))
@@ -764,7 +761,8 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 		USER <- reactiveValues()
 		USER$logged_in <- FALSE
 		USER$unique <- format(Sys.time(), '%Y%m%d%H%M%S')
-		USER$username <- NA
+		USER$username <- NA  # Unverschlüsselte Version für UI
+		USER$encrypted_username <- NA  # Verschlüsselte Version für DB-Operationen
 		for(i in additional_fields) {
 			USER[[i]] <- NA
 		}
@@ -779,21 +777,22 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 				if(!is.null(cookie_key)) {
 					username <- decrypt_cookie(username)
 				}
-			}, error = function(e) {
-				warning(paste0('Error retrieving cookie value.'))
-				cookies::remove_cookie(cookie_name = cookie_name)
-			})
-			if(!is.null(username)) {
-				user <- get_user(username)
+				# Hier muss die entschlüsselte Email wieder verschlüsselt werden
+				encrypted_username <- get_encrypted_email(username, salt, salt_algo)
+				user <- get_user(encrypted_username)
 				if(nrow(user) > 0) {
-					USER$username <- username
+					USER$username <- username  # Hier speichern wir die unverschlüsselte für die UI
+					USER$encrypted_username <- encrypted_username  # Neue Variable für DB-Operationen
 					USER$logged_in <- TRUE
 					for(i in names(additional_fields)) {
 						USER[[i]] <- user[1,i]
 					}
-					add_activitiy(username, 'login_cookie')
+					add_activitiy(encrypted_username, 'login_cookie')
 				}
-			}
+			}, error = function(e) {
+				warning(paste0('Error retrieving cookie value.'))
+				cookies::remove_cookie(cookie_name = cookie_name)
+			})
 		}, once = TRUE)
 
 		##### User Login #######################################################
@@ -1087,9 +1086,9 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 		observeEvent(input$reset_new_password, {
 			if(input$reset_password1 == input$reset_password2) {
 				query <- paste0(
-					"UPDATE users SET password = '",
+					"UPDATE ", users_table, " SET password = '",
 					get_password(input$reset_password1),
-					"' WHERE username = '", reset_username(), "'"
+					"' WHERE username = '", reset_username(), "'"  # reset_username() enthält bereits verschlüsselte Version
 				)
 				DBI::dbSendQuery(db_conn, query)
 				add_activitiy(reset_username(), 'password_reset')
