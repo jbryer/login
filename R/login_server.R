@@ -238,12 +238,7 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 				passwdInput(NS(id, 'password'), label = password_label, value = '')
 			)
 
-			if(!is.null(cookie_name)) {
-				args[[length(args) + 1]] <- checkboxInput(
-					inputId = NS(id, 'remember_me'),
-					label = 'Eingeloggt bleiben?',
-					value = TRUE)
-			}
+
 
 			args[[length(args) + 1]] <- actionButton(NS(id, "Login"),
 													 label = 'Login',
@@ -326,7 +321,7 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 				args[[length(args) + 1]] <- passwdInput(inputId = NS(id, 'new_password1'),
 								label = password_label, value = '')
 				args[[length(args) + 1]] <- passwdInput(inputId = NS(id, 'new_password2'),
-								label = paste0('Confirm ', password_label), value = '')
+								label = paste0(password_label, " bestätigen"), value = '')
 
 				if(!is.null(additional_fields)) {
 					for(i in seq_len(length(additional_fields))) {
@@ -558,3 +553,4 @@ Wenn Sie nicht angefordert haben, Ihr Passwort zurückzusetzen, können Sie dies
 		return(USER)
 	})
 }
+
