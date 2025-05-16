@@ -62,7 +62,7 @@ required for the Shiny application to run.</p>
 <span>  save_cookie_label <span class="op">=</span> <span class="st">"Save parameters as cookies."</span>,</span>
 <span>  validator <span class="op">=</span> <span class="va">simple_parameter_validator</span>,</span>
 <span>  open_on_startup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cookie_password <span class="op">=</span> <span class="st">"password"</span>,</span>
+<span>  cookie_password <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cookie_expiration <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  input_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -86,10 +86,10 @@ required for the Shiny application to run.</p>
 
 
 <dt id="arg-param-types">param_types<a class="anchor" aria-label="anchor" href="#arg-param-types"></a></dt>
-<dd><p>the type of value. Valid types include <code>character</code>, <code>integer</code>, <code>numeric</code>,
-<code>date</code>, <code>file</code>, or <code>select</code>. Note that for <code>select</code> you must specify the <code>choices</code>
-parameter in the <code>input_params</code>. For example,
-<code>input_params &lt;- list('param_name' = c('Option A', 'Option B'))</code></p></dd>
+<dd><p>the type of value. Valid types include <code>character</code>, <code>numeric</code>,
+<code>date</code>, <code>file</code>, <code>logical</code>, <code>password</code>, or <code>select</code>.
+Note that for <code>select</code> you must specify the <code>choices</code> parameter in the <code>input_params</code>.
+For example, <code>input_params &lt;- list('param_name' = c('Option A', 'Option B'))</code></p></dd>
 
 
 <dt id="arg-param-defaults">param_defaults<a class="anchor" aria-label="anchor" href="#arg-param-defaults"></a></dt>

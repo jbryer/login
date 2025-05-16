@@ -113,11 +113,17 @@ all the parameters will assume to be characters using the
 multiple input types including:</p>
 <ul>
 <li>
+<code>character</code> - String values</li>
+<li>
+<code>password</code> - String values but will use the
+<code><a href="https://rdrr.io/pkg/shiny/man/passwordInput.html" class="external-link">shiny::passwordInput</a></code> instead.</li>
+<li>
 <code>date</code> - Date values</li>
 <li>
-<code>integer</code> - Integer values</li>
-<li>
 <code>numeric</code> - Numeric values</li>
+<li>
+<code>logical</code> - Logical values, will be displayed as a
+checkbox.</li>
 <li>
 <code>file</code> - File uploads (note the value will be the path to
 where the file is uploaded)</li>
