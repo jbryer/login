@@ -9,6 +9,7 @@ devtools::build()
 shiny::runApp('inst/login_demo_simple/', port = 2112)
 shiny::runApp('inst/login_template/', port = 2112)
 shiny::runApp('inst/login_modal/', port = 2112)
+shiny::runApp('inst/user_params/', port = 2112)
 
 devtools::spell_check()
 
@@ -16,6 +17,7 @@ devtools::spell_check()
 devtools::check()
 
 vignette('login', package = 'login')
+vignette('parameters', package = 'login')
 
 devtools::release()
 

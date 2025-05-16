@@ -97,25 +97,6 @@ login_server <- function(
 	}
 
 	cookie_key <- NULL
-	# TODO: This is a workaround to the decryption. I am not entirely sure if this
-	# compromises the encryption of the cookie value. See this issue:
-	# https://github.com/r-lib/sodium/issues/21
-	# Could make this a function parameter.
-	cookie_nonce <- rep(as.raw(42), 24)
-
-	encrypt_cookie <- function(message) {
-		message |>
-			charToRaw() |>
-			sodium::data_encrypt(key = cookie_key, nonce = cookie_nonce) |>
-			sodium::bin2hex()
-	}
-
-	decrypt_cookie <- function(message) {
-		message |>
-			sodium::hex2bin() |>
-			sodium::data_decrypt(key = cookie_key, nonce = cookie_nonce) |>
-			rawToChar()
-	}
 
 	if(!is.null(cookie_name)) {
 		if(is.null(cookie_password)) {
@@ -205,7 +186,7 @@ login_server <- function(
 			username <- cookies::get_cookie(cookie_name = cookie_name, session = session)
 			tryCatch({
 				if(!is.null(cookie_key)) {
-					username <- decrypt_cookie(username)
+					username <- decrypt_cookie(cookie_key, username)
 				}
 			}, error = function(e) {
 				warning(paste0('Error retrieving cookie value.'))
@@ -266,7 +247,7 @@ login_server <- function(
 					if(input$remember_me) {
 						cookie_value <- username
 						if(!is.null(cookie_key)) {
-							cookie_value <- encrypt_cookie(username)
+							cookie_value <- encrypt_cookie(cookie_key, username)
 						}
 						tryCatch({
 							cookies::set_cookie(cookie_name = cookie_name,

@@ -1,3 +1,8 @@
+# login 1.0.0
+
+* First stable release of login.
+* This version adds parameter module. This is a mechanism to get parameters from users when Shiny applications startup. Optionally values are stored as cookies.
+
 # login 0.9.4
 
 * Added feature to encrypt cookie values using sodium. See the cookie_password parameter on the the login_server function for more details.

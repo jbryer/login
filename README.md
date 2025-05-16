@@ -7,7 +7,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jbryer/login/actions/workflows/R-CMD-check.yaml)
-[![](https://img.shields.io/badge/devel%20version-0.9.4-blue.svg)](https://github.com/jbryer/login)
+[![](https://img.shields.io/badge/devel%20version-1.0.0-blue.svg)](https://github.com/jbryer/login)
 [![](https://www.r-pkg.org/badges/version/login)](https://cran.r-project.org/package=login)
 [![](https://img.shields.io/badge/doi-10.5281/zenodo.10987876-blue.svg)](https://doi.org/10.5281/zenodo.10987876)
 
@@ -30,24 +30,32 @@ before storing it in the database.
 
 Resources for learning to use the `login` pacakge:
 
-- Package vignette `vignette('login', package = 'login')`
 - [Package Website](https://jbryer.github.io/login/)
 - [Slides from ShinyConf
   2024](https://github.com/jbryer/login/tree/main/inst/slides/login.pdf)
 
-You can install the latest development version using the `remotes`
-package:
+You can install from CRAN:
+
+``` r
+install.packages('login')
+```
+
+Or to install the latest development version:
 
 ``` r
 remotes::install_github('login')
 ```
 
-Once installed, there are three demos included:
+Once installed, there are several demos included:
 
 ``` r
+# These demonstrate the core login functionality
 shiny::runApp(paste0(find.package('login'), '/login_demo_simple/'), port = 2112)
 shiny::runApp(paste0(find.package('login'), '/login_template/'), port = 2112)
 shiny::runApp(paste0(find.package('login'), '/login_modal/'), port = 2112)
+# These demonstrate the user_param_module
+shiny::runApp(paste0(find.package('login'), '/user_params/'), port = 2112)
+shiny::runApp(paste0(find.package('login'), '/data_viewer/'), port = 2112)
 ```
 
 ## Code of Conduct
