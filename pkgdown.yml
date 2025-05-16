@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   login: login.html
   paramaters: paramaters.html
-last_built: 2025-05-16T03:35Z
+last_built: 2025-05-16T03:42Z
 urls:
   reference: https://jbryer.github.io/login/reference
   article: https://jbryer.github.io/login/articles

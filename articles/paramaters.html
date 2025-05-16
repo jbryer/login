@@ -66,6 +66,16 @@
 
     
     
+<p><strong>tl;dr</strong></p>
+<p>Once the <code>login</code> package is installed, you can run two
+demos using the following commands:</p>
+<ul>
+<li><p><code>shiny::runApp(paste0(find.package('login'), '/user_params/'))</code><br><a href="https://github.com/jbryer/login/blob/main/inst/user_params/app.R" class="external-link">https://github.com/jbryer/login/blob/main/inst/user_params/app.R</a></p></li>
+<li><p><code>shiny::runApp(paste0(find.package('login'), '/data_viewer/'))</code><br><a href="https://github.com/jbryer/login/blob/main/inst/data_viewer/app.R" class="external-link">https://github.com/jbryer/login/blob/main/inst/data_viewer/app.R</a></p></li>
+</ul>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>Shiny is an incredible tool for interactive data analysis. For the
 vast majority of Shiny applications I have developed I make a choice
 regarding the default state of the application, but provide plenty of
@@ -127,13 +137,14 @@ which is depicted in the figure below.</p>
 uses these values should automatically be updated if the values
 change.</p>
 <p>There are two UI components, specifically the
-<code><a href="../reference/userParamServer.html">showParamButton()</a></code> and <code><a href="../reference/userParamServer.html">clearParamButton()</a></code>
+<code><a href="../reference/userParamServerButtons.html">showParamButton()</a></code> and <code><a href="../reference/userParamServerButtons.html">clearParamButton()</a></code>
 buttons. The former will display the modal dialog allowing the user to
 change the values. The latter will clear all the values set (including
 cookies if enabled).</p>
-<div class="section level3">
-<h3 id="cookies">Cookies<a class="anchor" aria-label="anchor" href="#cookies"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="cookies">Cookies<a class="anchor" aria-label="anchor" href="#cookies"></a>
+</h2>
 <p>It is possible to save the user’s parameter values across session by
 saving them to cookies (as long as <code>allow_cookies = TRUE</code>).
 If the <code>allow_cookies</code> parameter is <code>TRUE</code>, the
@@ -143,9 +154,9 @@ encrypted. This feature uses the <a href="https://cookies.shinyworks.org" class=
 that <code><a href="https://rdrr.io/pkg/cookies/man/cookie_dependency.html" class="external-link">cookies::cookie_dependency()</a></code> is place somewhere in the
 Shiny UI.</p>
 </div>
-<div class="section level3">
-<h3 id="full-shiny-demo">Full Shiny Demo<a class="anchor" aria-label="anchor" href="#full-shiny-demo"></a>
-</h3>
+<div class="section level2">
+<h2 id="full-shiny-demo">Full Shiny Demo<a class="anchor" aria-label="anchor" href="#full-shiny-demo"></a>
+</h2>
 <p>The figures above are from the Shiny application provided below.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
@@ -178,8 +189,8 @@ Shiny UI.</p>
 <span>    <span class="fu">cookies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/cookies/man/cookie_dependency.html" class="external-link">cookie_dependency</a></span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Necessary to save/get cookies</span></span>
 <span>    <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/titlePanel.html" class="external-link">titlePanel</a></span><span class="op">(</span><span class="st">'Parameter Example'</span><span class="op">)</span>,</span>
 <span>    <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">verbatimTextOutput</a></span><span class="op">(</span><span class="st">'param_values'</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/userParamServer.html">showParamButton</a></span><span class="op">(</span><span class="st">'example'</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/userParamServer.html">clearParamButton</a></span><span class="op">(</span><span class="st">'example'</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/userParamServerButtons.html">showParamButton</a></span><span class="op">(</span><span class="st">'example'</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/userParamServerButtons.html">clearParamButton</a></span><span class="op">(</span><span class="st">'example'</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
@@ -202,9 +213,9 @@ Shiny UI.</p>
 <span></span>
 <span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>port <span class="op">=</span> <span class="fl">2112</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
-</h3>
+<div class="section level2">
+<h2 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
+</h2>
 <p>The <code>validator</code> parameter speicies a validation function
 to ensure the parameters entered by the user are valid. The default
 value of <code><a href="../reference/simple_parameter_validator.html">simple_parameter_validator()</a></code> simply ensures that
@@ -221,7 +232,6 @@ displayed to the user.</p></li>
 </ol>
 <p>If the validation function returns anything other than
 <code>TRUE</code> the modal dialog will be displayed.</p>
-</div>
 <div class="section level3">
 <h3 id="customizing-the-shiny-inputs">Customizing the Shiny inputs<a class="anchor" aria-label="anchor" href="#customizing-the-shiny-inputs"></a>
 </h3>
@@ -234,9 +244,10 @@ required. The following template provides the basic structure:</p>
 <code class="sourceCode R"><span><span class="va">input_params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>PARAM1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Option A'</span>, <span class="st">'Option B'</span><span class="op">)</span><span class="op">)</span>, <span class="co"># When select is the type</span></span>
 <span>                    PARAM2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">10</span>, stap <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="co"># When numeric or integer is the type</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="file-input-example">File Input Example<a class="anchor" aria-label="anchor" href="#file-input-example"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="file-input-example">File Input Example<a class="anchor" aria-label="anchor" href="#file-input-example"></a>
+</h2>
 <p>The following Shiny application demonstrates how to use the file
 upload and drop down selection features.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -262,8 +273,8 @@ upload and drop down selection features.</p>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>    <span class="fu">cookies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/cookies/man/cookie_dependency.html" class="external-link">cookie_dependency</a></span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Necessary to save/get cookies</span></span>
 <span>    <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/titlePanel.html" class="external-link">titlePanel</a></span><span class="op">(</span><span class="st">'Data Viewer'</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/userParamServer.html">showParamButton</a></span><span class="op">(</span><span class="st">'csvviewer'</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/userParamServer.html">clearParamButton</a></span><span class="op">(</span><span class="st">'csvviewer'</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/userParamServerButtons.html">showParamButton</a></span><span class="op">(</span><span class="st">'csvviewer'</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/userParamServerButtons.html">clearParamButton</a></span><span class="op">(</span><span class="st">'csvviewer'</span><span class="op">)</span>,</span>
 <span>    <span class="fu">DT</span><span class="fu">::</span><span class="fu">DTOutput</span><span class="op">(</span><span class="st">'data_table'</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
