@@ -47,7 +47,7 @@ install.packages('login')
 Or to install the latest development version:
 
 ```{r, eval=FALSE}
-remotes::install_github('login')
+remotes::install_github('jbryer/login')
 ```
 
 Once installed, there are several demos included:
