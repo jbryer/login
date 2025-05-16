@@ -18,6 +18,18 @@ knitr::opts_chunk$set(
 library(login)
 ```
 
+**tl;dr**
+
+Once the `login` package is installed, you can run two demos using the following commands:
+
+* `shiny::runApp(paste0(find.package('login'), '/user_params/'))`  
+[https://github.com/jbryer/login/blob/main/inst/user_params/app.R](https://github.com/jbryer/login/blob/main/inst/user_params/app.R)
+
+* `shiny::runApp(paste0(find.package('login'), '/data_viewer/'))`  
+[https://github.com/jbryer/login/blob/main/inst/data_viewer/app.R](https://github.com/jbryer/login/blob/main/inst/data_viewer/app.R)
+
+## Introduction
+
 Shiny is an incredible tool for interactive data analysis. For the vast majority of Shiny applications I have developed I make a choice regarding the default state of the application, but provide plenty of options for the user to change and/or customize the analysis. However, there are situations where the application would be better if the user was required to input certain parameters. Conceptually I often think of Shiny applications as an interactive version of a function, a function with many parameters, some of which the user needs to define the default parameters. This vignette describes a Shiny module where a given set of parameters must be set before the user engages with the main Shiny application, and those settings can be optionally saved as cookies to be used across sessions. Even though this is the main motivation for this Shiny module, it can also be used as a framework for saving user preferences where saving state on the Shiny server is not possible (e.g. when deployed to [www.shinyapps.io](https://www.shinyapps.io)).
 
 The user parameter module is part of the `login` R package. The goal is to present the user with a set of parameters in a modal dialog as the Shiny application loads. The primary interface is through the `userParamServer()` function that can be included in the server code. The following is a basic example.
@@ -56,11 +68,11 @@ The `userParamServer()` function returns a `shiny::reactiveValues()` object. As 
 
 There are two UI components, specifically the `showParamButton()` and `clearParamButton()` buttons. The former will display the modal dialog allowing the user to change the values. The latter will clear all the values set (including cookies if enabled).
 
-### Cookies
+## Cookies
 
 It is possible to save the user's parameter values across session by saving them to cookies (as long as `allow_cookies = TRUE`). If the `allow_cookies` parameter is `TRUE`, the user can still opt to not save the values as cookies. It is recommend to set the `cookie_password` value so that the cookie values are encrypted. This feature uses the [cookies](https://cookies.shinyworks.org) R package and requires that `cookies::cookie_dependency()` is place somewhere in the Shiny UI.
 
-### Full Shiny Demo
+## Full Shiny Demo
 
 The figures above are from the Shiny application provided below.
 
@@ -120,7 +132,7 @@ server <- function(input, output) {
 shiny::shinyApp(ui = ui, server = server, options = list(port = 2112))
 ```
 
-### Validation
+## Validation
 
 The `validator` parameter speicies a validation function to ensure the parameters entered by the user are valid. The default value of `simple_parameter_validator()` simply ensures that values have been entered. The Shiny application above extends this by also checking to see if the email address appears to be valid. 
 
@@ -141,7 +153,7 @@ input_params = list(PARAM1 = list(choices = c('Option A', 'Option B')), # When s
 					PARAM2 = list(min = 0, max = 10, stap = 1)) # When numeric or integer is the type
 ```
 
-### File Input Example
+## File Input Example
 
 The following Shiny application demonstrates how to use the file upload and drop down selection features.
 

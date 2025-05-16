@@ -4,7 +4,7 @@ if(FALSE) {
 
 #' Button to show the parameter modal dialog box.
 #'
-#' @rdname userParamServer
+#' @rdname userParamServerButtons
 #' @param id unique ID for the Shiny Login module.
 #' @param label The contents of the button or link–usually a text label, but you could also use any
 #'        other HTML, like an image.
@@ -18,7 +18,7 @@ showParamButton <- function(id, label = 'Edit Parameters', icon = shiny::icon('g
 
 #' Action button that will clear the parameters and remove cookies.
 #'
-#' @rdname userParamServer
+#' @rdname userParamServerButtons
 #' @param id unique ID for the Shiny Login module.
 #' @param label The contents of the button or link–usually a text label, but you could also use any
 #'        other HTML, like an image.
