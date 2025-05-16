@@ -46,9 +46,11 @@ params <- userParamServer(
 
 Like all [Shiny modules](https://mastering-shiny.org/scaling-modules.html), the `id` parameter is a unique identifier connected the server logic to the UI components. The `params` parameter is a character vector for the names of the parameters users need to input. These are the only two required parameters. By default all the parameters will assume to be characters using the `shiny::textInput()` function. However, the module supports multiple input types including:
 
+* `character` - String values
+* `password` - String values but will use the `shiny::passwordInput` instead.
 * `date` - Date values
-* `integer` - Integer values
 * `numeric` - Numeric values
+* `logical` - Logical values, will be displayed as a checkbox.
 * `file` - File uploads (note the value will be the path to where the file is uploaded)
 * `select` - Drop down selection. This type requires additional information vis-à-vis the `input_params` parameter discussed latter.
 

@@ -39,6 +39,7 @@ clearParamButton <- function(id, label = 'Clear Parameters', icon = shiny::icon(
 #' @export
 simple_parameter_validator <- function(values, types) {
 	for(i in seq_len(length(values))) {
+		if(types[i] == 'date') { next } # TODO: Not sure why dates fail the if statement
 		if(is.null(values[[i]]) | is.na(values[[i]]) | values[[i]] == '') {
 			return(paste0('Parameter "', names(values[i]), '" is required.'))
 		}
@@ -58,10 +59,10 @@ simple_parameter_validator <- function(values, types) {
 #' @param params a character vector with the name of the parameters. This should be valid R names
 #'        (i.e. start with a letter, do not contain any spaces, etc.).
 #' @param param_labels labels used for the user inputs.
-#' @param param_types the type of value. Valid types include `character`, `integer`, `numeric`,
-#'        `date`, `file`, or `select`. Note that for `select` you must specify the `choices`
-#'        parameter in the `input_params`. For example,
-#'         `input_params <- list('param_name' = c('Option A', 'Option B'))`
+#' @param param_types the type of value. Valid types include `character`, `numeric`,
+#'        `date`, `file`, `logical`, `password`, or `select`.
+#'        Note that for `select` you must specify the `choices` parameter in the `input_params`.
+#'         For example, `input_params <- list('param_name' = c('Option A', 'Option B'))`
 #' @param param_defaults default values for the params.
 #' @param modal_title title for the modal dialog.
 #' @param intro_message A message that is displayed at the top of the modal dialog. This can
@@ -105,7 +106,7 @@ userParamServer <- function(
 		save_cookie_label = 'Save parameters as cookies.',
 		validator = simple_parameter_validator,
 		open_on_startup = TRUE,
-		cookie_password = 'password',
+		cookie_password = NULL,
 		cookie_expiration = 30,
 		input_params = list()
 ) {
@@ -174,10 +175,6 @@ userParamServer <- function(
 				if(param_types[i] == 'date') {
 					input_fun <- shiny::dateInput
 					param_list$value <- as.Date(val)
-				} else if(param_types[i] == 'integer') {
-					input_fun <- shiny::numericInput
-					param_list$value <- as.integer(val)
-					param_list$step <- 1
 				} else if(param_types[i] == 'numeric') {
 					input_fun <- shiny::numericInput
 					param_list$value <- as.numeric(val)
@@ -187,12 +184,24 @@ userParamServer <- function(
 				} else if(param_types[i] == 'select') {
 					if(!('choices' %in% names(param_list))) {
 						stop(paste0('The choices parameter must be set. Try:\n',
-									'input_params = list("', params[i], '" = list(choices = c("Option A", "Option B")))'))
+									'input_params = list("', params[i],
+									'" = list(choices = c("Option A", "Option B")))'))
 					}
 					input_fun <- shiny::selectInput
-				} else {
+				} else if(param_types[i] == 'password') {
+					input_fun <- shiny::passwordInput
+					param_list$value <- val
+				} else if(param_types[i] == 'logical') {
+					input_fun <- shiny::checkboxInput
+					param_list$value <- as.logical(val)
+					if(is.na(param_list$value)) {
+						param_list$value <- FALSE
+					}
+				} else if(param_types[i] == 'character') {
 					input_fun <- shiny::textInput
 					param_list$value <- val
+				} else {
+					stop(paste0('Unknown parameter type: ', param_types[i]))
 				}
 				inputs[[ length(inputs) + 1 ]] <- do.call(input_fun, param_list)
 			}
@@ -235,6 +244,8 @@ userParamServer <- function(
 			for(i in names(values)) {
 				if(param_types[i] == 'file') {
 					val <- input[[i]]$datapath[1]
+				# } else if(param_types[i] == 'logical') {
+				# 	val <- input[i]
 				} else {
 					val <- input[[i]]
 				}

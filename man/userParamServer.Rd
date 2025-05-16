@@ -19,7 +19,7 @@ userParamServer(
   save_cookie_label = "Save parameters as cookies.",
   validator = simple_parameter_validator,
   open_on_startup = TRUE,
-  cookie_password = "password",
+  cookie_password = NULL,
   cookie_expiration = 30,
   input_params = list()
 )
@@ -32,10 +32,10 @@ userParamServer(
 
 \item{param_labels}{labels used for the user inputs.}
 
-\item{param_types}{the type of value. Valid types include \code{character}, \code{integer}, \code{numeric},
-\code{date}, \code{file}, or \code{select}. Note that for \code{select} you must specify the \code{choices}
-parameter in the \code{input_params}. For example,
-\code{input_params <- list('param_name' = c('Option A', 'Option B'))}}
+\item{param_types}{the type of value. Valid types include \code{character}, \code{numeric},
+\code{date}, \code{file}, \code{logical}, \code{password}, or \code{select}.
+Note that for \code{select} you must specify the \code{choices} parameter in the \code{input_params}.
+For example, \code{input_params <- list('param_name' = c('Option A', 'Option B'))}}
 
 \item{param_defaults}{default values for the params.}
 
